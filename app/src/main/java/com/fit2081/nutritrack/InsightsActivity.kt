@@ -65,14 +65,15 @@ fun InsightsPage(modifier: Modifier = Modifier, innerPadding: PaddingValues = Pa
     // Define food categories' max score (Based on expected output pdf)
     val categories = listOf(
         "Discretionary Foods" to 10,
-        "Vegetables" to 5,
-        "Fruits" to 5,
+        "Vegetables" to 10,
+        "Fruits" to 10,
         "Grains & Cereals" to 5,
-        "Whole Grains" to 10,
+        "Whole Grains" to 5,
         "Meat & Alternatives" to 10,
         "Dairy & Alternatives" to 10,
         "Water" to 5,
-        "Unsaturated Fats" to 10,
+        "Saturated Fat" to 5,
+        "Unsaturated Fats" to 5,
         "Sodium" to 10,
         "Sugars" to 10,
         "Alcohol" to 5
@@ -287,6 +288,7 @@ fun getUserScores(context: Context, userId: Int): MutableMap<String, Float>? {
             "Meat & Alternatives" to "MeatandalternativesHEIFAscore",
             "Dairy & Alternatives" to "DairyandalternativesHEIFAscore",
             "Water" to "WaterHEIFAscore",
+            "Saturated Fat" to "SaturatedFatHEIFAscore",
             "Unsaturated Fats" to "UnsaturatedFatHEIFAscore",
             "Sodium" to "SodiumHEIFAscore",
             "Sugars" to "SugarHEIFAscore",
