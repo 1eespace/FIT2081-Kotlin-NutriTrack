@@ -353,7 +353,7 @@ fun PersonaSelection(selectedPersona: MutableState<String>) {
             ShowPersonaModal(
                 personaName = selectedModalPersona!!,
                 personaDescription = personaDescriptions[selectedModalPersona!!] ?: "No description available.",
-                personaImage = painterResource(id = personaImages[selectedModalPersona!!] ?: R.drawable.default_image), // 이미지 추가!
+                personaImage = painterResource(id = personaImages[selectedModalPersona!!] ?: R.drawable.default_image),
                 onDismiss = { showModal = false }
             )
         }

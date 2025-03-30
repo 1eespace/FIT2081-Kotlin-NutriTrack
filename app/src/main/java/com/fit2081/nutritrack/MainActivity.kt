@@ -178,7 +178,7 @@ fun LandingPage(navController: NavController) {
 
             Spacer(modifier = Modifier.height(30.dp))
 
-            // Author Information (Placed at the bottom)
+            // Author Information
             Text(
                 text = "Designed by, Yeeun (Evie) Lee (34752110)",
                 fontSize = 12.sp,
