@@ -6,9 +6,12 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -16,17 +19,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.net.toUri
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.fit2081.nutritrack.ui.theme.NutriTrackTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,15 +66,19 @@ fun LandingPage(navController: NavController) {
                 .fillMaxSize()
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Top
         ) {
+            Spacer(modifier = Modifier.height(100.dp))
             // App Title
             Text(
                 text = "NutriTrack",
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp)
             )
 
             Spacer(modifier = Modifier.height(30.dp))
@@ -84,7 +90,7 @@ fun LandingPage(navController: NavController) {
                 modifier = Modifier.size(160.dp)
             )
 
-            Spacer(modifier = Modifier.height(30.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             Column(
                 modifier = Modifier
@@ -93,38 +99,67 @@ fun LandingPage(navController: NavController) {
                     // Enables scrolling if text is long
                     .verticalScroll(rememberScrollState())
             ) {
-                Spacer(modifier = Modifier.height(8.dp))
-
-                // Disclaimer Text
-                Text(
-                    text = "This app provides general health and nutrition information for educational purposes only. " +
-                            "It is not intended as medical advice, diagnosis, or treatment. " +
-                            "Always consult a qualified healthcare professional before making any changes to your diet, exercise, or health regimen. " +
-                            "Use this app at your own risk. \n" +
-                            "If you’d like to see an Accredited Practicing Dietitian (APD), please visit the Monash Nutrition/Dietetics Clinic (discounted rates for students):",
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.Medium,
-                    fontStyle = FontStyle.Italic,
-                    textAlign = TextAlign.Center
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                // Monash Nutrition Clinic Link (Clickable)
-                Text(
-                    text = "Monash Nutrition Clinic",
-                    fontSize = 14.sp,
-                    color = Color.Blue,
-                    fontWeight = FontWeight.Bold,
+                // Disclaimer
+                Card(
                     modifier = Modifier
-                        .clickable { openMonashClinic(context) }
-                        .padding(8.dp)
-                        .align(Alignment.CenterHorizontally)
-                )
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp, vertical = 8.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFFFAFAFA)),
+                ) {
+                    Column(
+                        modifier = Modifier.padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Info,
+                            contentDescription = "Info Icon",
+                            tint = Color(0xFF006400), // Green color
+                            modifier = Modifier.size(24.dp)
+                        )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Text(
+                            text = "This app provides general health and nutrition information for educational purposes only. " +
+                                    "It is not intended as medical advice, diagnosis, or treatment. " +
+                                    "Always consult a qualified healthcare professional before making any changes to your diet, exercise, or health regimen. " +
+                                    "Use this app at your own risk. \n\n" +
+                                    "If you’d like to see an Accredited Practicing Dietitian (APD), please visit the Monash Nutrition/Dietetics Clinic (discounted rates for students):",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Medium,
+                            fontStyle = FontStyle.Italic,
+                            textAlign = TextAlign.Justify,
+                            color = Color.DarkGray
+                        )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        // Clickable Link with Button-like Design
+                        Button(
+                            onClick = { openMonashClinic(context) },
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF203A84)),
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(8.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Search,
+                                contentDescription = "Search Icon",
+                                tint = Color.White,
+                                modifier = Modifier.size(16.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = "Visit Monash Nutrition Clinic",
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White
+                            )
+                        }
+                    }
+                }
             }
 
             Spacer(modifier = Modifier.height(30.dp))
-
             // Login Button
             Button(
                 onClick = {
@@ -135,21 +170,24 @@ fun LandingPage(navController: NavController) {
                     containerColor = Color(0xFF006400),
                     contentColor = Color.White
                 ),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp)
+                modifier = Modifier.width(320.dp).height(50.dp),
+                shape = RectangleShape
             ) {
                 Text("Login", fontSize = 15.sp)
             }
 
             Spacer(modifier = Modifier.height(30.dp))
 
-            // Author Information
+            // Author Information (Placed at the bottom)
             Text(
                 text = "Designed by, Yeeun (Evie) Lee (34752110)",
                 fontSize = 12.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = Color.Black
+                fontWeight = FontWeight.Bold,
+                color = Color.Black,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentWidth(Alignment.CenterHorizontally)
+                    .padding(bottom = 20.dp)
             )
         }
     }

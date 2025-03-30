@@ -167,7 +167,8 @@ fun QuestionnairePage(modifier: Modifier = Modifier) {
                         containerColor = Color(0xFF006400),
                         contentColor = Color.White
                     ),
-                    modifier = Modifier.fillMaxWidth().height(50.dp)
+                    modifier = Modifier.fillMaxWidth().height(50.dp),
+                    shape = RectangleShape,
                 ) {
                     Text("Save")
                 }
