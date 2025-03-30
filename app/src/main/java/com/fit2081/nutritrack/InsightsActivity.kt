@@ -190,7 +190,8 @@ fun FoodScoreItem(name: String, score: Number, maxScore: Int) {
         Text(
             text = name,
             modifier = Modifier.weight(2f),
-            fontSize = 13.sp
+            fontWeight = FontWeight.Bold,
+            fontSize = 12.sp
         )
 
         Spacer(modifier = Modifier.width(2.dp))
@@ -218,7 +219,7 @@ fun FoodScoreItem(name: String, score: Number, maxScore: Int) {
             // 2 decimal
             text = String.format("%.2f/%d", score.toFloat(), maxScore),
             fontWeight = FontWeight.Bold,
-            fontSize = 11.sp,
+            fontSize = 10.sp,
             modifier = Modifier
                 .weight(1f)
                 .padding(start = 8.dp)
