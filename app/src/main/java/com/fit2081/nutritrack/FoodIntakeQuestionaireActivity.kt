@@ -142,11 +142,13 @@ fun QuestionnairePage(modifier: Modifier = Modifier) {
 
             // Save Button
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                // Save Button - Checks if at least one food category is selected before saving
                 Button(
                     onClick = {
-                        if (selectedCategories.values.any { it }) { // Checking for users choose at least one food category
+                        if (selectedCategories.values.any { it }) { // Ensure at least one category is selected
                             val sharedPref = context.getSharedPreferences("a1_nutriTrack", Context.MODE_PRIVATE).edit()
 
+                            // Save questionnaire data
                             sharedPref.putString("selectedPersona_$userId", selectedPersona.value)
                             sharedPref.putString("biggestMealTime_$userId", biggestMealTime.value)
                             sharedPref.putString("sleepTime_$userId", sleepTime.value)
@@ -156,10 +158,16 @@ fun QuestionnairePage(modifier: Modifier = Modifier) {
                                 sharedPref.putBoolean("category_${userId}_$category", isChecked)
                             }
 
+                            // Ensure questionnaire completion status stored correctly
+                            sharedPref.putBoolean("questionnaire_completed_$userId", true)
                             sharedPref.apply()
-                            navigateToHome(context)
+
+                            // Redirect to Home Page
+                            context.startActivity(Intent(context, HomeActivity::class.java).apply {
+                                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                            })
                         } else {
-                            // Show Toast error message
+                            // Show error message if no category is selected
                             Toast.makeText(context, "⚠️ At least one food category must be selected!", Toast.LENGTH_SHORT).show()
                         }
                     },
@@ -184,6 +192,12 @@ fun HeaderTopAppBar(
     title: String,
     context: Context
 ) {
+    val sharedPref = context.getSharedPreferences("a1_nutriTrack", Context.MODE_PRIVATE)
+    val userId = sharedPref.getString("user_id", null)
+
+    // Check if the user has completed the questionnaire
+    val isQuestionnaireCompleted = sharedPref.getBoolean("questionnaire_completed_$userId", false)
+
     CenterAlignedTopAppBar(
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
             containerColor = Color(0xFFF5F5DC),
@@ -196,16 +210,19 @@ fun HeaderTopAppBar(
             )
         },
         navigationIcon = {
-            IconButton(onClick = { navigateToHome(context) }) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Back"
-
-                )
+            // Only show the back button for users who completed their questionnaire
+            if (isQuestionnaireCompleted) {
+                IconButton(onClick = { navigateToHome(context) }) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Back"
+                    )
+                }
             }
         }
     )
 }
+
 
 // Food Category Selection
 @Composable
@@ -401,7 +418,7 @@ fun ShowPersonaModal(
         confirmButton = {
             Button(
                 onClick = onDismiss,
-                colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray)
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF203A84))
             ) {
                 Text("Dismiss")
             }

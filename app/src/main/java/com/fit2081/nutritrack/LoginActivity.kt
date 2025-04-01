@@ -217,30 +217,54 @@ fun isLoginValid(context: Context, inputUserId: String, inputPhoneNumber: String
         val inputStream = assetManager.open("user_data.csv")
         val reader = BufferedReader(InputStreamReader(inputStream))
 
+        var isQuestionnaireCompleted = false
+
+        // Verify login credentials and check if the questionnaire is completed
         val loginSuccess = reader.useLines { lines ->
             lines.drop(1).any { line ->
                 val values = line.split(",").map { it.trim() }
-                values.size >= 2 && values[0] == inputPhoneNumber && values[1] == inputUserId
+                if (values.size >= 3 && values[0] == inputPhoneNumber && values[1] == inputUserId) {
+                    // Retrieve questionnaire completion status from SharedPreferences
+                    isQuestionnaireCompleted = getQuestionnaireStatus(context, inputUserId)
+                    true
+                } else {
+                    false
+                }
             }
         }
 
         if (loginSuccess) {
-            // Store the user ID and phone number in SharedPreferences
-            context.getSharedPreferences("a1_nutriTrack", Context.MODE_PRIVATE).edit {
+            // Store login details in SharedPreferences
+            val sharedPref = context.getSharedPreferences("a1_nutriTrack", Context.MODE_PRIVATE)
+            sharedPref.edit().apply {
                 putString("user_id", inputUserId)
                 putString("phone_number", inputPhoneNumber)
+                apply()
             }
 
-            // Success message and navigate to Questionnaire
+            // Navigate based on questionnaire completion status
+            if (isQuestionnaireCompleted) {
+                context.startActivity(Intent(context, HomeActivity::class.java).apply {
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                })
+            } else {
+                context.startActivity(Intent(context, FoodIntakeQuestionaireActivity::class.java).apply {
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                })
+            }
+
             Toast.makeText(context, "Login successful!", Toast.LENGTH_SHORT).show()
-            context.startActivity(Intent(context, FoodIntakeQuestionaireActivity::class.java).apply {
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            })
-        } else { // Error message
+        } else {
             Toast.makeText(context, "Invalid credentials.", Toast.LENGTH_SHORT).show()
         }
     } catch (e: Exception) {
         e.printStackTrace()
         Toast.makeText(context, "Login error: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
     }
+}
+
+// User's questionnaire status
+fun getQuestionnaireStatus(context: Context, userId: String): Boolean {
+    val sharedPref = context.getSharedPreferences("a1_nutriTrack", Context.MODE_PRIVATE)
+    return sharedPref.getBoolean("questionnaire_completed_$userId", false)
 }
