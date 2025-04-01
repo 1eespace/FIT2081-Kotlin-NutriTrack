@@ -197,12 +197,6 @@ fun loadUserIdsFromCSV(context: Context): List<String> {
     }
 }
 
-// Regex pattern: validates the phone number format
-fun isValidNumber(number: String): Boolean {
-    val pattern = Regex("^61(4365|4333)[0-9]{5}$")
-    return pattern.matches(number)
-}
-
 // Checks if the provided user ID and phone number match
 fun isLoginValid(context: Context, inputUserId: String, inputPhoneNumber: String) {
     try {
@@ -261,6 +255,12 @@ fun isLoginValid(context: Context, inputUserId: String, inputPhoneNumber: String
         e.printStackTrace()
         Toast.makeText(context, "Login error: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
     }
+}
+
+// Regex pattern: validates the phone number format
+fun isValidNumber(number: String): Boolean {
+    val pattern = Regex("^61(4365|4333)[0-9]{5}$")
+    return pattern.matches(number)
 }
 
 // User's questionnaire status
