@@ -177,7 +177,7 @@ fun QuestionnairePage(modifier: Modifier = Modifier) {
     }
 }
 
-// ✅ Header
+// Header
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HeaderTopAppBar(
@@ -207,7 +207,7 @@ fun HeaderTopAppBar(
     )
 }
 
-// ✅ Food Category Selection
+// Food Category Selection
 @Composable
 fun FoodCategorySelection(
     selectedCategories: MutableMap<String, Boolean>
@@ -239,7 +239,7 @@ fun FoodCategorySelection(
     }
 }
 
-// ✅ Persona selection
+// Persona selection
 @Composable
 fun PersonaSelection(selectedPersona: MutableState<String>) {
     var expanded by remember { mutableStateOf(false) }
@@ -360,8 +360,7 @@ fun PersonaSelection(selectedPersona: MutableState<String>) {
     }
 }
 
-
-// ✅ Modal
+// Show modal function
 @Composable
 fun ShowPersonaModal(
     personaName: String,
@@ -410,7 +409,7 @@ fun ShowPersonaModal(
     )
 }
 
-// ✅ TimePicker
+// TimePicker
 @Composable
 fun MealTimePicker(label: String, timeState: MutableState<String>) {
     val context = LocalContext.current
@@ -444,7 +443,7 @@ fun MealTimePicker(label: String, timeState: MutableState<String>) {
     }
 }
 
-// ✅ TimePickerDialog
+// TimePickerDialog
 fun showTimePicker(context: Context, timeState: MutableState<String>) {
     val calendar = Calendar.getInstance()
     val hour = calendar.get(Calendar.HOUR_OF_DAY)
@@ -462,7 +461,7 @@ fun showTimePicker(context: Context, timeState: MutableState<String>) {
     ).show()
 }
 
-// ✅ load saved data
+// load saved data
 fun loadSavedData(
     context: Context,
     // User ID: Different data load depends on ID

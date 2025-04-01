@@ -228,6 +228,7 @@ fun FoodScoreItem(name: String, score: Number, maxScore: Int) {
     }
 }
 
+// Text message: sharing score
 fun shareScore(context: Context, totalScore: Double) {
     val sharedPref = context.getSharedPreferences("a1_nutriTrack", Context.MODE_PRIVATE)
     val storedUserId = sharedPref.getString("user_id", "Unknown User")

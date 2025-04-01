@@ -113,7 +113,7 @@ fun LandingPage(navController: NavController) {
                         Icon(
                             imageVector = Icons.Default.Info,
                             contentDescription = "Info Icon",
-                            tint = Color(0xFF006400), // Green color
+                            tint = Color(0xFF006400),
                             modifier = Modifier.size(24.dp)
                         )
 
