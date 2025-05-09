@@ -15,30 +15,29 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NutriTrack"
         tools:targetApi="31" >
-
         <activity
-            android:name=".questionnaire.FoodIntakeQuestionnaireActivity"
+            android:name="com.fit2081.yeeun34752110.questionnaire.FoodIntakeQuestionnaireActivity"
             android:exported="false"
             android:label="@string/title_activity_food_intake_questionaire"
             android:theme="@style/Theme.NutriTrack"
             tools:ignore="MissingClass" />
         <activity
-            android:name=".home.HomeActivity"
+            android:name="com.fit2081.yeeun34752110.home.HomeActivity"
             android:exported="false"
             android:label="@string/title_activity_home"
             android:theme="@style/Theme.NutriTrack" />
         <activity
-            android:name=".auth.RegisterActivity"
+            android:name="com.fit2081.yeeun34752110.auth.RegisterActivity"
             android:exported="false"
             android:label="@string/title_activity_register"
             android:theme="@style/Theme.NutriTrack" />
         <activity
-            android:name=".auth.LoginActivity"
+            android:name="com.fit2081.yeeun34752110.auth.LoginActivity"
             android:exported="false"
             android:label="@string/title_activity_login"
             android:theme="@style/Theme.NutriTrack" />
         <activity
-            android:name=".MainActivity"
+            android:name="com.fit2081.yeeun34752110.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.NutriTrack" >
