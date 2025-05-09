@@ -62,6 +62,7 @@ fun ClinicianLogin(
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+
                     }
                 }
             )
