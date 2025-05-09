@@ -123,13 +123,12 @@ fun SettingsPage(
 
                 Text("OTHER SETTINGS", fontWeight = FontWeight.SemiBold, color = Color.DarkGray)
 
-                Spacer(Modifier.height(8.dp))
+                Spacer(Modifier.height(16.dp))
 
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable { navController.navigate("clinician login") }
-                        .padding(12.dp),
+                        .clickable { navController.navigate("clinician login") },
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
@@ -141,6 +140,8 @@ fun SettingsPage(
                     Icon(Icons.Default.ArrowForward, contentDescription = "Go")
                 }
 
+                Spacer(Modifier.height(16.dp))
+
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -149,8 +150,7 @@ fun SettingsPage(
                             navController.navigate("login") {
                                 popUpTo(0) { inclusive = true }
                             }
-                        }
-                        .padding(12.dp),
+                        },
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
