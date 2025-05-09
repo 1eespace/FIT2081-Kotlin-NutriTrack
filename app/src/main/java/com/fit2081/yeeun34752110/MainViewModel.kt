@@ -19,13 +19,13 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val patientDao = AppDataBase.getDatabase(application).patientDao()
     private val repository = PatientRepository(patientDao)
 
-    fun loadAndInsertData(context: Context) {
+    fun loadAndInsertFromCSV(context: Context) {
         val sharedPreferences = context.getSharedPreferences("AppPref", Context.MODE_PRIVATE)
         val isDataLoaded = sharedPreferences.getBoolean("isDataLoaded", false)
 
-        // If data has already been loaded, return early
+        // If data has already been loaded
         if (isDataLoaded) {
-            Log.v("MainViewModel", "Data already loaded. Skipping CSV insertion.")
+            Log.v("MainViewModel", "Data already loaded. There is no CSV insertion.")
             return
         }
 
