@@ -2,6 +2,7 @@ package com.fit2081.yeeun34752110.settings
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -42,11 +43,16 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.fit2081.yeeun34752110.AppViewModelFactory
 import com.fit2081.yeeun34752110.databases.AuthManager
+import com.fit2081.yeeun34752110.ui.theme.NutriTrackTheme
 
 class SettingsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        setContent {
+            NutriTrackTheme {
+            }
+        }
     }
 }
 

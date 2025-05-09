@@ -1,5 +1,9 @@
 package com.fit2081.yeeun34752110.nutricoach
 
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,8 +28,20 @@ import com.fit2081.yeeun34752110.AppViewModelFactory
 import com.fit2081.yeeun34752110.nutricoach.fruitapi.FruitsRepository
 import com.fit2081.yeeun34752110.genai.GenAiViewModel
 import com.fit2081.yeeun34752110.genai.UiState
+import com.fit2081.yeeun34752110.ui.theme.NutriTrackTheme
 import kotlinx.coroutines.launch
 import java.text.DecimalFormat
+
+class NutriCoachActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContent {
+            NutriTrackTheme {
+            }
+        }
+    }
+}
 
 @Composable
 fun NutriCoachPage(

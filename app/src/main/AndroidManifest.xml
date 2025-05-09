@@ -16,11 +16,35 @@
         android:theme="@style/Theme.NutriTrack"
         tools:targetApi="31" >
         <activity
+            android:name="com.fit2081.yeeun34752110.clinician.ClinicianActivity"
+            android:exported="false"
+            android:label="@string/title_activity_clinician"
+            android:theme="@style/Theme.NutriTrack" />
+        <activity
+            android:name="com.fit2081.yeeun34752110.clinician.ClinicianLoginActivity"
+            android:exported="false"
+            android:label="@string/title_activity_clinician_login"
+            android:theme="@style/Theme.NutriTrack" />
+        <activity
+            android:name="com.fit2081.yeeun34752110.settings.SettingsActivity"
+            android:exported="false"
+            android:label="@string/title_activity_settings"
+            android:theme="@style/Theme.NutriTrack" />
+        <activity
+            android:name="com.fit2081.yeeun34752110.nutricoach.NutriCoachActivity"
+            android:exported="false"
+            android:label="@string/title_activity_nutri_coach"
+            android:theme="@style/Theme.NutriTrack" />
+        <activity
+            android:name="com.fit2081.yeeun34752110.insights.InsightsActivity"
+            android:exported="false"
+            android:label="@string/title_activity_insights"
+            android:theme="@style/Theme.NutriTrack" />
+        <activity
             android:name="com.fit2081.yeeun34752110.questionnaire.FoodIntakeQuestionnaireActivity"
             android:exported="false"
             android:label="@string/title_activity_food_intake_questionaire"
-            android:theme="@style/Theme.NutriTrack"
-            tools:ignore="MissingClass" />
+            android:theme="@style/Theme.NutriTrack" />
         <activity
             android:name="com.fit2081.yeeun34752110.home.HomeActivity"
             android:exported="false"

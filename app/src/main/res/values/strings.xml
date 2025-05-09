@@ -1,10 +1,14 @@
 <resources>
     <string name="app_name">NutriTrack</string>
     <string name="title_activity_login">LoginActivity</string>
-    <string name="title_activity_register">Register</string>
+    <string name="title_activity_register">RegisterActivity</string>
     <string name="title_activity_home">HomeActivity</string>
-    <string name="title_activity_insights">InsightsActivity</string>
     <string name="title_activity_food_intake_questionaire">FoodIntakeQuestionaireActivity</string>
+    <string name="title_activity_insights">InsightsActivity</string>
+    <string name="title_activity_nutri_coach">NutriCoachActivity</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_activity_clinician">ClinicianActivity</string>
+    <string name="title_activity_clinician_login">ClinicianLoginActivity</string>
     <string name="title_activity_bottom_nav_bar">BottomNavBar</string>
     <string name="title_activity_csvdata">CSVData</string>
     <string name="prompt_placeholder">\"\"</string>

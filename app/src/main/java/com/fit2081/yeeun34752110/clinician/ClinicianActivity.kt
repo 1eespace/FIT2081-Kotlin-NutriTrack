@@ -1,5 +1,9 @@
 package com.fit2081.yeeun34752110.clinician
 
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -41,7 +45,20 @@ import androidx.navigation.NavHostController
 import com.fit2081.yeeun34752110.AppViewModelFactory
 import com.fit2081.yeeun34752110.genai.GenAiViewModel
 import com.fit2081.yeeun34752110.genai.UiState
+import com.fit2081.yeeun34752110.ui.theme.NutriTrackTheme
 import kotlinx.coroutines.launch
+
+class ClinicianActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContent {
+            NutriTrackTheme {
+
+            }
+        }
+    }
+}
 
 @Composable
 fun ClinicianPage(
