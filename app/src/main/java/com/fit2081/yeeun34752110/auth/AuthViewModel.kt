@@ -75,12 +75,12 @@ class AuthViewModel(private val repository: PatientRepository) : ViewModel() {
         selectedUserId = id
     }
 
-    fun updateName(n: String) {
-        name = n
+    fun updateName(nane: String) {
+        name = nane
     }
 
-    fun updatePhone(p: String) {
-        phone = p
+    fun updatePhone(phoneNum: String) {
+        phone = phoneNum
     }
 
     fun updateConfirmPassword(pw: String) {
@@ -156,10 +156,10 @@ class AuthViewModel(private val repository: PatientRepository) : ViewModel() {
                 return@launch
             }
 
-            // Name validation: only English letters, not empty
-            val namePattern = Regex("^[A-Za-z]+\$")
-            if (name.isBlank() || !namePattern.matches(name)) {
-                registrationMessage.value = "Name must contain only letters."
+            // Name validation: exactly 8 Eng chars, not empty
+            val namePattern = Regex("^[A-Za-z]{1,8}$")
+            if (!namePattern.matches(name)) {
+                registrationMessage.value = "Maximum 8 characters (A–Z, a–z)."
                 return@launch
             }
 

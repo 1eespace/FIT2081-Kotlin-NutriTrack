@@ -111,7 +111,7 @@ fun LoginPage(
             ) {
                 Spacer(modifier = Modifier.height(topSpacerHeight))
                 Text(
-                    text = "User Login",
+                    text = "Log in",
                     style = MaterialTheme.typography.headlineLarge,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black

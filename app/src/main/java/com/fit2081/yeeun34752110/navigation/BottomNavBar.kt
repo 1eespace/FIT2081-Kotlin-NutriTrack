@@ -8,6 +8,7 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 
@@ -28,7 +29,7 @@ fun BottomNavBar(navController: NavHostController) {
         items.forEachIndexed { index, item ->
             NavigationBarItem(
                 icon = { Icon(icons[index], contentDescription = item) },
-                label = { Text(item) },
+                label = { Text(item.replaceFirstChar { it.uppercase() }) },
                 selected = activeRoute == item,
                 onClick = {
                     if (currentRoute != item) {
@@ -38,7 +39,10 @@ fun BottomNavBar(navController: NavHostController) {
                             restoreState = true
                         }
                     }
-                }
+                },
+                colors = NavigationBarItemDefaults.colors(
+                    selectedTextColor = Color(0xFF006400)
+                )
             )
         }
     }

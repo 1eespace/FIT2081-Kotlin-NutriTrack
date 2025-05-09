@@ -118,7 +118,7 @@ fun RegisterPage(
                     OutlinedTextField(
                         value = selectedUserId,
                         onValueChange = {},
-                        label = { Text("User ID") },
+                        label = { Text("My ID") },
                         leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
                         readOnly = true,
@@ -149,12 +149,12 @@ fun RegisterPage(
                 OutlinedTextField(
                     value = name,
                     onValueChange = {
-                        if (it.all { c -> c.isLetter() || c == ' ' }) {
+                        if (it.all { c -> c.isLetter() }) {
                             viewModel.updateName(it)
                         }
                     },
                     label = { Text("Name") },
-                    placeholder = { Text("Only English letters (A-Z, a-z)") },
+                    placeholder = { Text("Maximum 8 characters (A-Z, a-z)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -182,7 +182,7 @@ fun RegisterPage(
                         }
                     },
                     label = { Text("Password") },
-                    placeholder = { Text("4-8 characters: A-Z, a-z, 0-9") },
+                    placeholder = { Text("4 to 8 only letters and digits") },
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                     modifier = Modifier.fillMaxWidth()
@@ -199,7 +199,7 @@ fun RegisterPage(
                         }
                     },
                     label = { Text("Confirm Password") },
-                    placeholder = { Text("Re-enter your password (4-8 A-Z, 0-9)") },
+                    placeholder = { Text("Re-enter your password") },
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                     modifier = Modifier.fillMaxWidth()
