@@ -13,6 +13,9 @@ import com.fit2081.yeeun34752110.BuildConfig
 import com.fit2081.yeeun34752110.databases.nutricoachtips.NutriCoachTips
 import com.fit2081.yeeun34752110.databases.nutricoachtips.NutriCoachTipsRepository
 
+// apiKey for GenAi
+// GENAI_API_KEY="AIzaSyBYwmYfkns0pYfVe5ZfCBE-wKC5JE-viSM"
+
 class GenAiViewModel(
     private val repository: NutriCoachTipsRepository
 ) : ViewModel() {
@@ -25,10 +28,6 @@ class GenAiViewModel(
         modelName = "gemini-1.5-flash",
         apiKey = BuildConfig.GENAI_API_KEY
     )
-
-    suspend fun getTips(patientId: Int): List<NutriCoachTips> {
-        return repository.getTipsForPatient(patientId)
-    }
 
     fun sendPrompt(
         prompt: String,
