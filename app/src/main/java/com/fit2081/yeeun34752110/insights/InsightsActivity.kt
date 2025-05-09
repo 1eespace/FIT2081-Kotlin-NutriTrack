@@ -1,0 +1,200 @@
+package com.fit2081.yeeun34752110.insights
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import com.fit2081.yeeun34752110.AppViewModelFactory
+
+@Composable
+fun InsightsPage(
+    userId: Int,
+    modifier: Modifier = Modifier,
+    navController: NavHostController
+) {
+    val context = LocalContext.current
+    val viewModel: InsightsViewModel = viewModel(factory = AppViewModelFactory(context))
+
+    LaunchedEffect(userId) {
+        viewModel.loadPatientScoresById(userId)
+    }
+
+    val patient by viewModel.patient.collectAsState()
+
+    patient?.let { data ->
+        val categories = listOf(
+            "Discretionary Foods" to Pair(data.discretionaryFoods, 10),
+            "Vegetables" to Pair(data.vegetables, 10),
+            "Fruits" to Pair(data.fruits, 10),
+            "Grains & Cereals" to Pair(data.grainsAndCereals, 5),
+            "Whole Grains" to Pair(data.wholeGrains, 5),
+            "Meat & Alternatives" to Pair(data.meatAndAlternatives, 10),
+            "Dairy & Alternatives" to Pair(data.dairyAndAlternatives, 10),
+            "Water" to Pair(data.water, 5),
+            "Saturated Fat" to Pair(data.saturatedFats, 5),
+            "Unsaturated Fats" to Pair(data.unsaturatedFats, 5),
+            "Sodium" to Pair(data.sodium, 10),
+            "Sugars" to Pair(data.sugars, 10),
+            "Alcohol" to Pair(data.alcohol, 5)
+        )
+
+        val totalScore = categories.sumOf { it.second.first.toDouble() }.toFloat()
+        val totalMaxScore = categories.sumOf { it.second.second }
+
+        // UI starts here
+        LazyColumn(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            contentPadding = PaddingValues(top = 32.dp, bottom = 32.dp)
+        ) {
+            item {
+                Column(
+                    modifier = Modifier
+                        .widthIn(max = 800.dp)
+                        .padding(horizontal = 16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    // Title
+                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                        Text(
+                            "Insights: Food Score",
+                            fontSize = 28.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.Black
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // Each category item
+                    categories.forEach { (category, pair) ->
+                        FoodScoreItem(name = category, score = pair.first, maxScore = pair.second)
+                        Spacer(modifier = Modifier.height(12.dp))
+                    }
+
+                    // Total score
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text("Total Food Quality Score", fontWeight = FontWeight.Bold)
+                        Text(
+                            String.format("%.1f/%d", totalScore, totalMaxScore),
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+
+                    Slider(
+                        value = totalScore,
+                        onValueChange = {},
+                        enabled = false,
+                        valueRange = 0f..totalMaxScore.toFloat(),
+                        colors = SliderDefaults.colors(
+                            disabledThumbColor = Color(0xFF203A84),
+                            disabledActiveTrackColor = Color(0xFF203A84)
+                        )
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    // Buttons
+                    Button(
+                        onClick = {
+                            val userScores = categories.associate { it.first to it.second.first }
+                            viewModel.sharingInsights(
+                                context,
+                                userScores,
+                                totalScore,
+                                totalMaxScore.toFloat()
+                            )
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(48.dp),
+                        shape = RectangleShape,
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF056207))
+                    ) {
+                        Text("Share with someone", color = Color.White)
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Button(
+                        onClick = {
+                            navController.navigate("nutricoach")
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(48.dp),
+                        shape = RectangleShape,
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF056207))
+                    ) {
+                        Text("Improve my diet!", color = Color.White)
+                    }
+                }
+            }
+        }
+
+    }
+}
+
+
+@Composable
+fun FoodScoreItem(name: String, score: Float, maxScore: Int) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(name, modifier = Modifier.weight(2f), fontSize = 12.sp, fontWeight = FontWeight.Bold)
+
+        Slider(
+            value = score,
+            onValueChange = {},
+            valueRange = 0f..maxScore.toFloat(),
+            enabled = false,
+            modifier = Modifier.weight(3f),
+            colors = SliderDefaults.colors(
+                disabledThumbColor = Color(0xFF203A84),
+                disabledActiveTrackColor = Color(0xFF203A84)
+            )
+        )
+
+        Text(
+            text = String.format("%.1f/%d", score, maxScore),
+            fontSize = 12.sp,
+            modifier = Modifier.weight(1f),
+            fontWeight = FontWeight.Bold
+        )
+    }
+}
+

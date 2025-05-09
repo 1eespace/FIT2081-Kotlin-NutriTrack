@@ -6,4 +6,9 @@
     <string name="title_activity_food_intake_questionaire">FoodIntakeQuestionaireActivity</string>
     <string name="title_activity_bottom_nav_bar">BottomNavBar</string>
     <string name="title_activity_csvdata">CSVData</string>
+    <string name="prompt_placeholder">\"\"</string>
+    <string name="results_placeholder">\"(Results will appear here)\"</string>
+    <string name="app_title">Tips GenAi</string>
+    <string name="label_prompt">\"Prompt\"\n</string>
+    <string name="action_go">\"Go\"</string>
 </resources>

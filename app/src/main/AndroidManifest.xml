@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -13,27 +16,23 @@
         android:theme="@style/Theme.NutriTrack"
         tools:targetApi="31">
         <activity
-            android:name=".InsightsActivity"
-            android:exported="false"
-            android:label="@string/title_activity_insights"
-            android:theme="@style/Theme.NutriTrack" />
-        <activity
-            android:name=".FoodIntakeQuestionaireActivity"
+            android:name="com.fit2081.yeeun34752110.questionnaire.FoodIntakeQuestionnaireActivity"
             android:exported="false"
             android:label="@string/title_activity_food_intake_questionaire"
-            android:theme="@style/Theme.NutriTrack" />
+            android:theme="@style/Theme.NutriTrack"
+            tools:ignore="MissingClass" />
         <activity
-            android:name=".HomeActivity"
+            android:name="com.fit2081.yeeun34752110.home.HomeActivity"
             android:exported="false"
             android:label="@string/title_activity_home"
             android:theme="@style/Theme.NutriTrack" />
         <activity
-            android:name=".LoginActivity"
+            android:name="com.fit2081.yeeun34752110.auth.LoginActivity"
             android:exported="false"
             android:label="@string/title_activity_login"
             android:theme="@style/Theme.NutriTrack" />
         <activity
-            android:name=".MainActivity"
+            android:name="com.fit2081.yeeun34752110.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.NutriTrack">
