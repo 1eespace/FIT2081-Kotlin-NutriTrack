@@ -6,15 +6,15 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface PatientDao {
 
-    // Insert a new patient into the database
+    // Insert
     @Insert
     suspend fun insertPatient(patient: Patient)
 
-    // Update an existing patient's data
+    // Update
     @Update
     suspend fun updatePatient(patient: Patient)
 
-    // Delete a patient from the database
+    // Delete
     @Delete
     suspend fun deletePatient(patient: Patient)
 
@@ -23,24 +23,25 @@ interface PatientDao {
 
     // Get all patients from the database
     @Query("SELECT * FROM patients")
-    fun getAllPatients(): Flow<List<Patient>> // No suspend modifier here
+    fun getAllPatients(): Flow<List<Patient>>
 
     // Get a patient by ID
     @Query("SELECT * FROM patients WHERE patientId = :id")
-    fun getPatientById(id: Int): Flow<Patient?> // No suspend modifier here
+    fun getPatientById(id: Int): Flow<Patient?>
 
     // Get a patient by phone number
     @Query("SELECT * FROM patients WHERE patientPhoneNumber = :phoneNumber")
-    fun getPatientByPhoneNumber(phoneNumber: String): Flow<Patient?> // No suspend modifier here
+    fun getPatientByPhoneNumber(phoneNumber: String): Flow<Patient?>
 
     // Get patients based on their sex
     @Query("SELECT * FROM patients WHERE patientSex = :sex")
-    fun getPatientsBySex(sex: String): Flow<List<Patient>> // No suspend modifier here
+    fun getPatientsBySex(sex: String): Flow<List<Patient>>
 
     // Get only all patient IDs
     @Query("SELECT patientId FROM patients")
-    fun getAllPatientIds(): Flow<List<Int>> // No suspend modifier here
+    fun getAllPatientIds(): Flow<List<Int>>
 
+    // Delete all
     @Query("DELETE FROM patients")
     suspend fun deleteAllPatients()
 }

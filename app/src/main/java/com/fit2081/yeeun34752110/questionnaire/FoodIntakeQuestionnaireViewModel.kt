@@ -103,7 +103,11 @@ class FoodIntakeQuestionnaireViewModel (val repository: FoodIntakeRepository) : 
         }
     }
 
+    private var isDataLoaded = false
+
     fun loadExistingFoodIntake(patientId: Int) {
+        if (isDataLoaded) return
+
         viewModelScope.launch {
             try {
                 val intake = repository.getFoodIntakeByPatientId(patientId)
@@ -122,6 +126,8 @@ class FoodIntakeQuestionnaireViewModel (val repository: FoodIntakeRepository) : 
                     selectedCategories["Fish"] = it.intakeFish
                     selectedCategories["Eggs"] = it.intakeEggs
                     selectedCategories["Nuts/Seeds"] = it.intakeNutsOrSeeds
+
+                    isDataLoaded = true
                 }
             } catch (e: Exception) {
             }
