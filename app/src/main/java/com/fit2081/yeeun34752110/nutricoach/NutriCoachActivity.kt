@@ -97,9 +97,9 @@ fun NutriCoachPage(
                 Text("NutriCoach", fontSize = 28.sp, fontWeight = FontWeight.Bold, color = Color.Black)
 
                 Spacer(modifier = Modifier.height(8.dp))
-
+                // Optimal: 10, others: non-optimal (low or sub)
                 patient?.let { data ->
-                    if (data.fruits < 5) {
+                    if (data.fruits < 10) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             verticalAlignment = Alignment.CenterVertically
