@@ -12,6 +12,7 @@ data class Patient(
     var patientPassword: String,
 
     // Dietary category
+    val totalScore: Float,
     val discretionaryFoods: Float,
     val vegetables: Float,
     val fruits: Float,
@@ -24,6 +25,5 @@ data class Patient(
     val unsaturatedFats: Float,
     val sodium: Float,
     val sugars: Float,
-    val alcohol: Float,
-    val totalScore: Float
+    val alcohol: Float
 )

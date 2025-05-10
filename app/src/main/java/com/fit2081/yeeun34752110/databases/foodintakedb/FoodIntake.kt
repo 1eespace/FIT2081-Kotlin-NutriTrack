@@ -19,8 +19,7 @@ import com.fit2081.yeeun34752110.databases.patientdb.Patient
     indices = [Index(value = ["patientId"])]
 )
 data class FoodIntake(
-    @PrimaryKey(autoGenerate = true) val intakeId: Int = 0,
-    val patientId: Int,
+    @PrimaryKey(autoGenerate = true) val patientId: Int,
 
     var sleepTime: String = "",
     var wakeTime: String = "",
@@ -28,13 +27,14 @@ data class FoodIntake(
     var selectedPersona: String = "",
 
     // Food category checkboxes
-    var intakeFruits: Boolean = false,
-    var intakeVegetables: Boolean = false,
-    var intakeGrains: Boolean = false,
-    var intakeRedMeat: Boolean = false,
-    var intakeSeafood: Boolean = false,
     var intakePoultry: Boolean = false,
-    var intakeFish: Boolean = false,
+    var intakeSeafood: Boolean = false,
     var intakeEggs: Boolean = false,
-    var intakeNutsOrSeeds: Boolean = false
+    var intakeVegetables: Boolean = false,
+    var intakeNutsOrSeeds: Boolean = false,
+    var intakeRedMeat: Boolean = false,
+    var intakeFruits: Boolean = false,
+    var intakeFish: Boolean = false,
+    var intakeGrains: Boolean = false
+
 )

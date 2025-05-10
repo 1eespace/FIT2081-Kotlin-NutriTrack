@@ -97,6 +97,11 @@ fun QuestionnairePage(
         factory = AppViewModelFactory(context)
     )
 
+    // Load saved data so user can edit
+    LaunchedEffect(patientId) {
+        viewModel.loadExistingFoodIntake(patientId)
+    }
+
     Scaffold(
         topBar = {
             HeaderTopAppBar(
@@ -140,9 +145,9 @@ fun QuestionnairePage(
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.align(Alignment.Start)
                     )
-                    MealTimePicker("Time of your biggest meal?", "meal", viewModel)
                     MealTimePicker("Time you sleep?", "sleep", viewModel)
                     MealTimePicker("Time you wake up?", "wake", viewModel)
+                    MealTimePicker("Time of your biggest meal?", "meal", viewModel)
 
                     Spacer(modifier = Modifier.height(24.dp))
 
@@ -518,18 +523,3 @@ fun showTimePicker(
 fun hasDuplicateTimes(vararg times: String): Boolean {
     return times.toSet().size != times.size
 }
-
-fun timeToMinutes(time: String): Int {
-    val parts = time.split(":")
-    val hour = parts[0].toIntOrNull() ?: 0
-    val minute = parts[1].toIntOrNull() ?: 0
-    return hour * 60 + minute
-}
-
-fun isTimeSequenceValid(wake: String, meal: String, sleep: String): Boolean {
-    val wakeMin = timeToMinutes(wake)
-    val mealMin = timeToMinutes(meal)
-    val sleepMin = timeToMinutes(sleep)
-    return wakeMin < mealMin && mealMin < sleepMin
-}
-

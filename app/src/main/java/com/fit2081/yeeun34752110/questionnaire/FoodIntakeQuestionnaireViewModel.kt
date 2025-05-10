@@ -80,16 +80,11 @@ class FoodIntakeQuestionnaireViewModel (val repository: FoodIntakeRepository) : 
             return
         }
 
-        if (!isTimeSequenceValid(wakeTime, biggestMealTime, sleepTime)) {
-            onError("Invalid time order: Wake < Meal < Sleep")
-            return
-        }
-
         val intake = FoodIntake(
             patientId = userId,
-            biggestMealTime = biggestMealTime,
             sleepTime = sleepTime,
             wakeTime = wakeTime,
+            biggestMealTime = biggestMealTime,
             selectedPersona = selectedPersona,
             intakeFruits = selectedCategories["Fruits"] ?: false,
             intakeVegetables = selectedCategories["Vegetables"] ?: false,
@@ -105,6 +100,31 @@ class FoodIntakeQuestionnaireViewModel (val repository: FoodIntakeRepository) : 
         viewModelScope.launch {
             repository.insertFoodIntake(intake)
             onSuccess()
+        }
+    }
+
+    fun loadExistingFoodIntake(patientId: Int) {
+        viewModelScope.launch {
+            try {
+                val intake = repository.getFoodIntakeByPatientId(patientId)
+                intake?.let {
+                    sleepTime = it.sleepTime
+                    wakeTime = it.wakeTime
+                    biggestMealTime = it.biggestMealTime
+                    selectedPersona = it.selectedPersona
+
+                    selectedCategories["Fruits"] = it.intakeFruits
+                    selectedCategories["Vegetables"] = it.intakeVegetables
+                    selectedCategories["Grains"] = it.intakeGrains
+                    selectedCategories["Red Meat"] = it.intakeRedMeat
+                    selectedCategories["Seafood"] = it.intakeSeafood
+                    selectedCategories["Poultry"] = it.intakePoultry
+                    selectedCategories["Fish"] = it.intakeFish
+                    selectedCategories["Eggs"] = it.intakeEggs
+                    selectedCategories["Nuts/Seeds"] = it.intakeNutsOrSeeds
+                }
+            } catch (e: Exception) {
+            }
         }
     }
 }
