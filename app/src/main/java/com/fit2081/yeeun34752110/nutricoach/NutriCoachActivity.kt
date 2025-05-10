@@ -240,9 +240,10 @@ fun NutriCoachPage(
             },
             title = { Text("AI Tips", fontWeight = FontWeight.Bold) },
             text = {
-                val recent3Tips = tipList.sortedByDescending { it.tipsId }.take(3)
+                val allTips = tipList.sortedByDescending { it.tipsId } // or just tipList
+
                 LazyColumn(modifier = Modifier.heightIn(max = 300.dp)) {
-                    recent3Tips.forEach { tip ->
+                    allTips.forEach { tip ->
                         item {
                             Card(
                                 modifier = Modifier
