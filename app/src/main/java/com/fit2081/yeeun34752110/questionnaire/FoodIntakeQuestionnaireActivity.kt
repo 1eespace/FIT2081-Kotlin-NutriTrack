@@ -101,6 +101,7 @@ fun QuestionnairePage(
         topBar = {
             HeaderTopAppBar(
                 title = "Food Intake Questionnaire",
+                patientId = patientId,
                 repository = viewModel.repository,
                 onBack = { navController.popBackStack() }
             )
@@ -183,16 +184,16 @@ fun QuestionnairePage(
 @Composable
 fun HeaderTopAppBar(
     title: String,
+    patientId: Int,
     repository: FoodIntakeRepository,
     // optional callback for navigation
     onBack: (() -> Unit)? = null
 ) {
-    val userId = AuthManager.getPatientId()?.toIntOrNull() ?: -1
     var hasCompleted by remember { mutableStateOf(false) }
 
-    LaunchedEffect(userId) {
+    LaunchedEffect(patientId) {
         runCatching {
-            repository.getFoodIntakeByPatientId(userId)
+            repository.getFoodIntakeByPatientId(patientId)
         }.onSuccess {
             hasCompleted = it != null
         }.onFailure {
