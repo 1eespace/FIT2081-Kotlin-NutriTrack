@@ -83,6 +83,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                     repository.dataInsert(patient)
                 }
                 Log.d("MainViewModel", "All patients reloaded successfully")
+                // For loading csv file once
+                sharedPref.edit().putBoolean("isDataLoaded", true).apply()
 
             } catch (e: Exception) {
                 Log.e("MainViewModel", "Error reading CSV: ${e.message}", e)
