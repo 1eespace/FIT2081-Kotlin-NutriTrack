@@ -21,7 +21,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun loadAndInsertFromCSV(context: Context) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                // Checking for db is existing or not
+                // Check if database already contains any patients
                 val existingPatients = repository.getAllPatientsOnce()
                 if (existingPatients.isNotEmpty()) {
                     Log.d("MainViewModel", "CSV already loaded. Skipping import.")
@@ -33,9 +33,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 val lines = reader.readLines()
                 if (lines.isEmpty()) return@launch
 
+                // Parse CSV headers
                 val headers = lines.first().split(",").map { it.trim() }
                 val headerIndex = headers.withIndex().associate { it.value to it.index }
 
+                // Iterate through CSV lines and insert patients
                 for (line in lines.drop(1)) {
                     val tokens = line.split(",").map { it.trim() }
                     if (tokens.size < headers.size) continue
@@ -45,20 +47,26 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                     val sex = tokens[headerIndex["Sex"] ?: continue]
                     val gender = if (sex.equals("Male", ignoreCase = true)) "Male" else "Female"
 
-                    // Checking Patient Name/Password are exist
+                    // Skip if this patient already exists in the database
                     val existing = repository.getPatientById(patientId)
+                    if (existing != null) {
+                        Log.d("MainViewModel", "Patient ID $patientId already exists. Skipping.")
+                        continue
+                    }
 
+                    // Retrieve HEIFA score based on gendered column
                     fun getFloat(prefix: String): Float {
                         val columnName = "${prefix}$gender"
                         val index = headerIndex[columnName] ?: return 0f
                         return tokens[index].toFloatOrNull() ?: 0f
                     }
 
+                    // Create Patient object from CSV row
                     val patient = Patient(
                         patientId = patientId,
-                        patientName = existing?.patientName ?: "",
+                        patientName = "",
                         patientSex = sex,
-                        patientPassword = existing?.patientPassword ?: "",
+                        patientPassword = "",
                         patientPhoneNumber = phone,
                         totalScore = getFloat("HEIFAtotalscore"),
                         discretionaryFoods = getFloat("DiscretionaryHEIFAscore"),
@@ -76,6 +84,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                         alcohol = getFloat("AlcoholHEIFAscore")
                     )
 
+                    // Insert new patient into the database
                     repository.dataInsert(patient)
                 }
 
