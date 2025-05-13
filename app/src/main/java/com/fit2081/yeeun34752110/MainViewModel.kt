@@ -23,61 +23,68 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         val sharedPreferences = context.getSharedPreferences("AppPref", Context.MODE_PRIVATE)
         val isDataLoaded = sharedPreferences.getBoolean("isDataLoaded", false)
 
-        // If data has already been loaded
         if (isDataLoaded) {
             Log.v("MainViewModel", "Data already loaded. There is no CSV insertion.")
             return
         }
 
-        Log.v("MainViewModel", "Getting csv data")
-        val currentDate = Date()
-        println("Current Date object: $currentDate")
         viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val inputStream = context.assets.open("user_data.csv")
+                val reader = BufferedReader(InputStreamReader(inputStream))
+                val lines = reader.readLines()
+                if (lines.isEmpty()) return@launch
 
-            val inputStream = context.assets.open("user_data.csv")
-            val reader = BufferedReader(InputStreamReader(inputStream))
-            val lines = reader.readLines()
+                val headers = lines.first().split(",").map { it.trim() }
+                val headerIndex = headers.withIndex().associate { it.value to it.index }
 
+                for (line in lines.drop(1)) {
+                    val tokens = line.split(",")
+                    if (tokens.size < headers.size) continue
 
-            for (line in lines.drop(1)) {
-                val tokens = line.split(",")
-                if (tokens.size < 62) continue
+                    val phone = tokens[headerIndex["Phone"] ?: continue].trim()
+                    val patientId = tokens[headerIndex["PatientID"] ?: continue].trim().toInt()
+                    val sex = tokens[headerIndex["Sex"] ?: continue].trim()
+                    val isMale = sex.equals("Male", ignoreCase = true)
+                    val genderKey = if (isMale) "Male" else "Female"
 
-                val phone = tokens[0]
-                val patientId = tokens[1].trim().toInt()
-                val name = ""
-                val sex = tokens[2]
-                val password = ""
-                val isMale = sex.equals("Male", ignoreCase = true)
+                    // Get values
+                    fun get(field: String): Float {
+                        val columnName = "${field}_$genderKey"
+                        val index = headerIndex[columnName] ?: error("Missing column: $columnName")
+                        return tokens[index].toFloat()
+                    }
 
-                val patient = Patient(
-                    patientId = patientId,
-                    patientName = name,
-                    patientSex = sex,
-                    patientPassword = password,
-                    patientPhoneNumber = phone,
-                    vegetables = tokens[if (isMale) 8 else 9].toFloat(),
-                    fruits = tokens[if (isMale) 19 else 20].toFloat(),
-                    grainsAndCereals = tokens[if (isMale) 29 else 30].toFloat(),
-                    wholeGrains = tokens[if (isMale) 33 else 34].toFloat(),
-                    meatAndAlternatives = tokens[if (isMale) 36 else 37].toFloat(),
-                    dairyAndAlternatives = tokens[if (isMale) 40 else 41].toFloat(),
-                    water = tokens[if (isMale) 49 else 50].toFloat(),
-                    saturatedFats = tokens[if (isMale) 57 else 58].toFloat(),
-                    unsaturatedFats = tokens[if (isMale) 60 else 61].toFloat(),
-                    sodium = tokens[if (isMale) 43 else 44].toFloat(),
-                    sugars = tokens[if (isMale) 54 else 55].toFloat(),
-                    alcohol = tokens[if (isMale) 46 else 47].toFloat(),
-                    discretionaryFoods = tokens[if (isMale) 5 else 6].toFloat(),
-                    totalScore = tokens[if (isMale) 3 else 4].toFloat()
-                )
+                    val patient = Patient(
+                        patientId = patientId,
+                        patientName = "",
+                        patientSex = sex,
+                        patientPassword = "",
+                        patientPhoneNumber = phone,
+                        vegetables = get("Vegetables"),
+                        fruits = get("Fruits"),
+                        grainsAndCereals = get("GrainsAndCereals"),
+                        wholeGrains = get("WholeGrains"),
+                        meatAndAlternatives = get("MeatAndAlternatives"),
+                        dairyAndAlternatives = get("DairyAndAlternatives"),
+                        water = get("Water"),
+                        saturatedFats = get("SaturatedFats"),
+                        unsaturatedFats = get("UnsaturatedFats"),
+                        sodium = get("Sodium"),
+                        sugars = get("Sugars"),
+                        alcohol = get("Alcohol"),
+                        discretionaryFoods = get("DiscretionaryFoods"),
+                        totalScore = get("TotalScore")
+                    )
 
-                repository.safeInsert(patient)
+                    repository.safeInsert(patient)
+                }
+
+                Log.d("MainViewModel", "All patients reloaded successfully")
+
+            } catch (e: Exception) {
+                Log.e("MainViewModel", "Error reading CSV: ${e.message}", e)
             }
-
-            Log.d("MainViewModel", "All patients reloaded successfully")
         }
     }
 }
-
-

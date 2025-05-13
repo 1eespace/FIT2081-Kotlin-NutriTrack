@@ -10,7 +10,7 @@ class PatientRepository(private val patientDao: PatientDao) {
 
     // Fetch all patient IDs as a Flow
     fun allPatientIds(): Flow<List<Int>> {
-        return patientDao.getAllPatientIds() // Return the Flow directly
+        return patientDao.getAllPatientIds()
     }
 
     suspend fun getPatientById(id: Int): Patient? {
