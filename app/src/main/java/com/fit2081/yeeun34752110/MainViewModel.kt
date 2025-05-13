@@ -18,10 +18,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private val patientDao = AppDataBase.getDatabase(application).patientDao()
     private val repository = PatientRepository(patientDao)
-
     fun loadAndInsertFromCSV(context: Context) {
-        val sharedPreferences = context.getSharedPreferences("AppPref", Context.MODE_PRIVATE)
-        val isDataLoaded = sharedPreferences.getBoolean("isDataLoaded", false)
+        val sharedPref = context.getSharedPreferences("AppPref", Context.MODE_PRIVATE)
+        val isDataLoaded = sharedPref.getBoolean("isDataLoaded", false)
 
         if (isDataLoaded) {
             Log.v("MainViewModel", "Data already loaded. There is no CSV insertion.")
@@ -55,11 +54,14 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                         return tokens[index].toFloat()
                     }
 
+                    // Find the existing patient name/password
+                    val existing = repository.getPatientById(patientId)
+
                     val patient = Patient(
                         patientId = patientId,
-                        patientName = "",
+                        patientName = existing?.patientName ?: "",
+                        patientPassword = existing?.patientPassword ?: "",
                         patientSex = sex,
-                        patientPassword = "",
                         patientPhoneNumber = phone,
                         vegetables = get("Vegetables"),
                         fruits = get("Fruits"),
@@ -77,9 +79,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                         totalScore = get("TotalScore")
                     )
 
-                    repository.safeInsert(patient)
+                    // PatientRepository: Insert data to the patients database
+                    repository.dataInsert(patient)
                 }
-
                 Log.d("MainViewModel", "All patients reloaded successfully")
 
             } catch (e: Exception) {

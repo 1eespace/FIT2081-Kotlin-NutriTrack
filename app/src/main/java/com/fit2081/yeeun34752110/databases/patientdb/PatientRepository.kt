@@ -21,11 +21,21 @@ class PatientRepository(private val patientDao: PatientDao) {
         patientDao.updatePatient(patient)
     }
 
-    suspend fun safeInsert(patient: Patient){
+    /**
+     * Safely insert or update a patient in the database.
+     *
+     * If a patient with the same ID already exists, their data will be updated.
+     * If no such patient exists, a new record will be inserted.
+     *
+     * @param patient The Patient object to insert or update.
+     */
+    suspend fun dataInsert(patient: Patient) {
         val existing = getPatientById(patient.patientId)
         if (existing == null) {
+            // No existing patient found, insert new record
             patientDao.insertPatient(patient)
         } else {
+            // Patient already exists, update existing record
             patientDao.updatePatient(patient)
         }
     }
