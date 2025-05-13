@@ -14,10 +14,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
@@ -84,41 +90,56 @@ fun InsightsPage(
         val totalScore = categories.sumOf { it.second.first.toDouble() }.toFloat()
         val totalMaxScore = categories.sumOf { it.second.second }
 
-        // UI starts here
+        // Main content with scrollable column
         LazyColumn(
             modifier = modifier
                 .fillMaxSize()
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            contentPadding = PaddingValues(top = 32.dp, bottom = 32.dp)
+            contentPadding = PaddingValues(bottom = 32.dp)
         ) {
             item {
                 Column(
                     modifier = Modifier
                         .widthIn(max = 800.dp)
-                        .padding(horizontal = 16.dp),
+                        .padding(horizontal = 8.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    // Title
-                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                    // Back button and title
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        IconButton(onClick = { navController.popBackStack() }) {
+                            Icon(
+                                imageVector = Icons.Default.ArrowBack,
+                                contentDescription = "Back",
+                                tint = Color.Black
+                            )
+                        }
+                        Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            "Insights: Food Score",
-                            fontSize = 28.sp,
+                            text = "Insights: Food Score",
+                            fontSize = 24.sp,
                             fontWeight = FontWeight.Bold,
-                            color = Color.Black
+                            color = Color.Black,
+                            // Manually move to right
+                            modifier = Modifier.padding(start = 10.dp)
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(12.dp))
 
-                    // Each category item
+                    // List of score items
                     categories.forEach { (category, pair) ->
                         FoodScoreItem(name = category, score = pair.first, maxScore = pair.second)
                         Spacer(modifier = Modifier.height(12.dp))
                     }
 
-                    // Total score
+                    // Total score summary
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
@@ -130,6 +151,7 @@ fun InsightsPage(
                         )
                     }
 
+                    // Total score slider (disabled)
                     Slider(
                         value = totalScore,
                         onValueChange = {},
@@ -143,7 +165,7 @@ fun InsightsPage(
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    // Buttons
+                    // Share button
                     Button(
                         onClick = {
                             val userScores = categories.associate { it.first to it.second.first }
@@ -165,10 +187,9 @@ fun InsightsPage(
 
                     Spacer(modifier = Modifier.height(8.dp))
 
+                    // Navigate to nutrition coaching
                     Button(
-                        onClick = {
-                            navController.navigate("nutricoach")
-                        },
+                        onClick = { navController.navigate("nutricoach") },
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(48.dp),
@@ -180,10 +201,8 @@ fun InsightsPage(
                 }
             }
         }
-
     }
 }
-
 
 @Composable
 fun FoodScoreItem(name: String, score: Float, maxScore: Int) {
@@ -213,4 +232,3 @@ fun FoodScoreItem(name: String, score: Float, maxScore: Int) {
         )
     }
 }
-

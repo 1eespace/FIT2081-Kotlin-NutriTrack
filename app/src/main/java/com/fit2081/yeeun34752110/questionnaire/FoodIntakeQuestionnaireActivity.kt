@@ -115,10 +115,9 @@ fun QuestionnairePage(
         LazyColumn(
             modifier = modifier
                 .padding(innerPadding)
-                .padding(horizontal = 16.dp, vertical = 12.dp)
+                .padding(horizontal = 16.dp)
                 .fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
+
             contentPadding = PaddingValues(vertical = 32.dp)
         ) {
             item {
@@ -223,7 +222,7 @@ fun HeaderTopAppBar(
         title = {
             Text(title, maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                fontSize = 24.sp,
+                fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black)
         },
