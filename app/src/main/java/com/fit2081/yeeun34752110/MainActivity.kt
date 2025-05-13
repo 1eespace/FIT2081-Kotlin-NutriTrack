@@ -36,14 +36,14 @@ import com.fit2081.yeeun34752110.ui.theme.NutriTrackTheme
 
 
 class MainActivity : ComponentActivity() {
-//    private val viewModel: MainViewModel by lazy {
-//        ViewModelProvider(this)[MainViewModel::class.java]
-//    }
+    private val viewModel: MainViewModel by lazy {
+        ViewModelProvider(this)[MainViewModel::class.java]
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-//         viewModel.loadAndInsertFromCSV(this)
+        viewModel.loadAndInsertFromCSV(this)
 
         setContent {
             NutriTrackTheme {

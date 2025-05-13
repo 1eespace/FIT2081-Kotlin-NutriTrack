@@ -9,12 +9,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import com.fit2081.yeeun34752110.BuildConfig
 import com.fit2081.yeeun34752110.databases.nutricoachtips.NutriCoachTips
 import com.fit2081.yeeun34752110.databases.nutricoachtips.NutriCoachTipsRepository
 
 // apiKey for GenAi
-// GENAI_API_KEY="AIzaSyBYwmYfkns0pYfVe5ZfCBE-wKC5JE-viSM"
+const val GENAI_API_KEY= "AIzaSyBYwmYfkns0pYfVe5ZfCBE-wKC5JE-viSM"
 
 class GenAiViewModel(
     private val repository: NutriCoachTipsRepository
@@ -26,7 +25,7 @@ class GenAiViewModel(
 
     private val generativeModel = GenerativeModel(
         modelName = "gemini-1.5-flash",
-        apiKey = BuildConfig.GENAI_API_KEY
+        apiKey = GENAI_API_KEY
     )
 
     fun sendPrompt(
