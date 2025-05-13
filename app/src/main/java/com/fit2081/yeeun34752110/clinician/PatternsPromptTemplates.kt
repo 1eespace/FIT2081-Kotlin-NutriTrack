@@ -16,7 +16,7 @@ object PatternsPromptTemplates {
             $summary
 
             Identify 3 clear dietary patterns related to:
-            - High or low consumption of water, sugar, saturated fat
+            - High or low consumption of water, sugar, saturated fat, vegetables
             - Any gender-based differences (if relevant)
             - Low-scoring food categories like whole grains or vegetables
 
