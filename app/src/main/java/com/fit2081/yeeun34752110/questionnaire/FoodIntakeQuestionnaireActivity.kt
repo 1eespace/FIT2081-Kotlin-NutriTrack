@@ -154,12 +154,25 @@ fun QuestionnairePage(
                     // Save button
                     Button(
                         onClick = {
+                            val wake = viewModel.wakeTime
+                            val meal = viewModel.biggestMealTime
+                            val sleep = viewModel.sleepTime
+
+                            if (!isTimeOrderValid(wake, meal, sleep)) {
+                                Toast.makeText(
+                                    context,
+                                    "Your biggest meal time must be between wake up time and sleep time.",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                                return@Button
+                            }
+
                             viewModel.saveFoodIntake(
                                 userId = patientId,
                                 selectedCategories = viewModel.selectedCategories,
-                                biggestMealTime = viewModel.biggestMealTime,
-                                sleepTime = viewModel.sleepTime,
-                                wakeTime = viewModel.wakeTime,
+                                biggestMealTime = meal,
+                                sleepTime = sleep,
+                                wakeTime = wake,
                                 selectedPersona = viewModel.selectedPersona,
                                 onSuccess = {
                                     context.startActivity(Intent(context, HomeActivity::class.java).apply {
@@ -522,4 +535,23 @@ fun showTimePicker(
 
 fun hasDuplicateTimes(vararg times: String): Boolean {
     return times.toSet().size != times.size
+}
+
+// wakeup -> meal -> sleep
+fun isTimeOrderValid(wake: String, meal: String, sleep: String): Boolean {
+    return try {
+        val wakeMins = convertToMinutes(wake)
+        val mealMins = convertToMinutes(meal)
+        val sleepMins = convertToMinutes(sleep)
+
+        // Time order: wake < meal < sleep
+        wakeMins < mealMins && mealMins < sleepMins
+    } catch (e: Exception) {
+        false
+    }
+}
+
+fun convertToMinutes(time: String): Int {
+    val (h, m) = time.split(":").map { it.toInt() }
+    return h * 60 + m
 }
