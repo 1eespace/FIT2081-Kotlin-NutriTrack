@@ -12,23 +12,22 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.BufferedReader
 import java.io.InputStreamReader
-import java.util.Date
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private val patientDao = AppDataBase.getDatabase(application).patientDao()
     private val repository = PatientRepository(patientDao)
+
     fun loadAndInsertFromCSV(context: Context) {
-        val sharedPref = context.getSharedPreferences("AppPref", Context.MODE_PRIVATE)
-        val isDataLoaded = sharedPref.getBoolean("isDataLoaded", false)
-
-        if (isDataLoaded) {
-            Log.v("MainViewModel", "Data already loaded. There is no CSV insertion.")
-            return
-        }
-
         viewModelScope.launch(Dispatchers.IO) {
             try {
+                // Checking for db is existing or not
+                val existingPatients = repository.getAllPatientsOnce()
+                if (existingPatients.isNotEmpty()) {
+                    Log.d("MainViewModel", "CSV already loaded. Skipping import.")
+                    return@launch
+                }
+
                 val inputStream = context.assets.open("user_data.csv")
                 val reader = BufferedReader(InputStreamReader(inputStream))
                 val lines = reader.readLines()
@@ -38,56 +37,52 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 val headerIndex = headers.withIndex().associate { it.value to it.index }
 
                 for (line in lines.drop(1)) {
-                    val tokens = line.split(",")
+                    val tokens = line.split(",").map { it.trim() }
                     if (tokens.size < headers.size) continue
 
-                    val phone = tokens[headerIndex["Phone"] ?: continue].trim()
-                    val patientId = tokens[headerIndex["PatientID"] ?: continue].trim().toInt()
-                    val sex = tokens[headerIndex["Sex"] ?: continue].trim()
-                    val isMale = sex.equals("Male", ignoreCase = true)
-                    val genderKey = if (isMale) "Male" else "Female"
+                    val phone = tokens[headerIndex["PhoneNumber"] ?: continue]
+                    val patientId = tokens[headerIndex["User_ID"] ?: continue].toIntOrNull() ?: continue
+                    val sex = tokens[headerIndex["Sex"] ?: continue]
+                    val gender = if (sex.equals("Male", ignoreCase = true)) "Male" else "Female"
 
-                    // Get values
-                    fun get(field: String): Float {
-                        val columnName = "${field}_$genderKey"
-                        val index = headerIndex[columnName] ?: error("Missing column: $columnName")
-                        return tokens[index].toFloat()
-                    }
-
-                    // Find the existing patient name/password
+                    // Checking Patient Name/Password are exist
                     val existing = repository.getPatientById(patientId)
+
+                    fun getFloat(prefix: String): Float {
+                        val columnName = "${prefix}$gender"
+                        val index = headerIndex[columnName] ?: return 0f
+                        return tokens[index].toFloatOrNull() ?: 0f
+                    }
 
                     val patient = Patient(
                         patientId = patientId,
                         patientName = existing?.patientName ?: "",
-                        patientPassword = existing?.patientPassword ?: "",
                         patientSex = sex,
+                        patientPassword = existing?.patientPassword ?: "",
                         patientPhoneNumber = phone,
-                        vegetables = get("Vegetables"),
-                        fruits = get("Fruits"),
-                        grainsAndCereals = get("GrainsAndCereals"),
-                        wholeGrains = get("WholeGrains"),
-                        meatAndAlternatives = get("MeatAndAlternatives"),
-                        dairyAndAlternatives = get("DairyAndAlternatives"),
-                        water = get("Water"),
-                        saturatedFats = get("SaturatedFats"),
-                        unsaturatedFats = get("UnsaturatedFats"),
-                        sodium = get("Sodium"),
-                        sugars = get("Sugars"),
-                        alcohol = get("Alcohol"),
-                        discretionaryFoods = get("DiscretionaryFoods"),
-                        totalScore = get("TotalScore")
+                        totalScore = getFloat("HEIFAtotalscore"),
+                        discretionaryFoods = getFloat("DiscretionaryHEIFAscore"),
+                        vegetables = getFloat("VegetablesHEIFAscore"),
+                        fruits = getFloat("FruitHEIFAscore"),
+                        grainsAndCereals = getFloat("GrainsandcerealsHEIFAscore"),
+                        wholeGrains = getFloat("WholegrainsHEIFAscore"),
+                        meatAndAlternatives = getFloat("MeatandalternativesHEIFAscore"),
+                        dairyAndAlternatives = getFloat("DairyandalternativesHEIFAscore"),
+                        water = getFloat("WaterHEIFA"),
+                        saturatedFats = getFloat("SaturatedFatHEIFAscore"),
+                        unsaturatedFats = getFloat("UnsaturatedFatHEIFAscore"),
+                        sodium = getFloat("SodiumHEIFAscore"),
+                        sugars = getFloat("SugarHEIFAscore"),
+                        alcohol = getFloat("AlcoholHEIFAscore")
                     )
 
-                    // PatientRepository: Insert data to the patients database
                     repository.dataInsert(patient)
                 }
-                Log.d("MainViewModel", "All patients reloaded successfully")
-                // For loading csv file once
-                sharedPref.edit().putBoolean("isDataLoaded", true).apply()
+
+                Log.d("MainViewModel", "CSV loaded and inserted successfully.")
 
             } catch (e: Exception) {
-                Log.e("MainViewModel", "Error reading CSV: ${e.message}", e)
+                Log.e("MainViewModel", "Error loading CSV", e)
             }
         }
     }
