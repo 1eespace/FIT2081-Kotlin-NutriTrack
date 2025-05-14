@@ -69,21 +69,18 @@ fun ClinicianPage(
     val context = LocalContext.current
     val viewModel: ClinicianViewModel = viewModel(factory = AppViewModelFactory(context))
     val genAiViewModel: GenAiViewModel = viewModel(factory = AppViewModelFactory(context))
-    val screenHeightDp = LocalConfiguration.current.screenHeightDp
-    val topSpacerHeight = (screenHeightDp * 0.08f).dp
-
-    val uiState by genAiViewModel.uiState.collectAsState()
-    val dataPatterns by viewModel.dataPatterns.collectAsState()
-
-    var avgMaleScore by remember { mutableStateOf(0f) }
-    var avgFemaleScore by remember { mutableStateOf(0f) }
-
     val coroutineScope = rememberCoroutineScope()
 
+    val uiState by genAiViewModel.uiState.collectAsState()
+    // GenAi dataPatterns
+    val dataPatterns by viewModel.dataPatterns.collectAsState()
+
+    // Male/Female Avg HEIFA Score
+    val avgMaleScore by viewModel.avgMaleScore.collectAsState()
+    val avgFemaleScore by viewModel.avgFemaleScore.collectAsState()
+
     LaunchedEffect(Unit) {
-        val (male, female) = viewModel.generateAvgScores()
-        avgMaleScore = male
-        avgFemaleScore = female
+        viewModel.generateAvgScores()
     }
 
     LazyColumn(
@@ -101,7 +98,6 @@ fun ClinicianPage(
                     .padding(horizontal = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Spacer(modifier = Modifier.height(topSpacerHeight))
                 // Title
                 Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                     Text("Clinician Dashboard", fontSize = 22.sp, fontWeight = FontWeight.Bold)

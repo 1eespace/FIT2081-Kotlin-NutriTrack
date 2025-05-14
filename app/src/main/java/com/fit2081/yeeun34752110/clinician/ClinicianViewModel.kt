@@ -19,6 +19,7 @@ class ClinicianViewModel(private val repository: PatientRepository) : ViewModel(
     var clinicianKey by mutableStateOf("")
         private set
 
+    // --- Rotate Screen ---
     fun updateClinicianKey(newKey: String) {
         clinicianKey = newKey
     }
@@ -27,15 +28,15 @@ class ClinicianViewModel(private val repository: PatientRepository) : ViewModel(
         return clinicianKey == "dollar-entry-apples"
     }
 
-    // --- GenAi DataPatterns State ---
-    private val _dataPatterns = MutableStateFlow<List<String>>(emptyList())
-    val dataPatterns: StateFlow<List<String>> = _dataPatterns
+    // --- Avg Score ---
+    private val _avgMaleScore = MutableStateFlow(0f)
+    val avgMaleScore: StateFlow<Float> = _avgMaleScore
 
-    fun handleAiResponse(aiText: String) {
-        _dataPatterns.value = aiText.split("\n").filter { it.isNotBlank() }.take(3)
-    }
+    private val _avgFemaleScore = MutableStateFlow(0f)
+    val avgFemaleScore: StateFlow<Float> = _avgFemaleScore
 
-    suspend fun generateAvgScores(): Pair<Float, Float> {
+    // --- GenerateAvgScore ---
+    suspend fun generateAvgScores() {
         val patients = repository.getAllPatientsOnce()
 
         val malePatients = patients.filter { it.patientSex.equals("male", ignoreCase = true) }
@@ -49,7 +50,16 @@ class ClinicianViewModel(private val repository: PatientRepository) : ViewModel(
             femalePatients.map { it.totalScore }.average().toFloat()
         } else 0f
 
-        return Pair(maleScore, femaleScore)
+        _avgMaleScore.value = maleScore
+        _avgFemaleScore.value = femaleScore
+    }
+
+    // --- GenAi DataPatterns State ---
+    private val _dataPatterns = MutableStateFlow<List<String>>(emptyList())
+    val dataPatterns: StateFlow<List<String>> = _dataPatterns
+
+    fun handleAiResponse(aiText: String) {
+        _dataPatterns.value = aiText.split("\n").filter { it.isNotBlank() }.take(3)
     }
 
     suspend fun generateAiPatterns(genAiViewModel: GenAiViewModel) {
