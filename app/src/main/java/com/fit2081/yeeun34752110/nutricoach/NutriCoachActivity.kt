@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -83,43 +84,30 @@ fun NutriCoachPage(
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp),
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        contentPadding = PaddingValues(top = 32.dp, bottom = 32.dp)
+        contentPadding = PaddingValues(bottom = 32.dp)
     ) {
         item {
             Column(
                 modifier = Modifier
                     .widthIn(max = 800.dp)
-                    .padding(horizontal = 16.dp),
+                    .padding(horizontal = 8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Back button and title
-                Row(
+                Text(
+                    text = "NutriCoach",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Back",
-                            tint = Color.Black
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = "NutriCoach",
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Black,
-                        // Manually move to right
-                        modifier = Modifier.padding(start = 53.dp)
-                    )
-                }
-                Spacer(modifier = Modifier.width(16.dp))
+                    textAlign = TextAlign.Center
+                )
+
+                Spacer(modifier = Modifier.width(30.dp))
 
                 // Optimal: 10, others: non-optimal (low or sub)
                 patient?.let { data ->
@@ -200,7 +188,7 @@ fun NutriCoachPage(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(30.dp))
 
                 Button(
                     onClick = {

@@ -39,6 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -81,40 +82,26 @@ fun SettingsPage(
         modifier = modifier
             .fillMaxSize()
             .padding(horizontal = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = PaddingValues(vertical = 32.dp)
     ) {
         item {
             Column(
                 modifier = Modifier
                     .widthIn(max = 800.dp)
-                    .padding(horizontal = 24.dp)
+                    .padding(horizontal = 8.dp)
             ) {
-                // Back button and title
-                Row(
+                Text(
+                    text = "Settings",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Back",
-                            tint = Color.Black
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = "Settings",
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Black,
-                        // Manually move to right
-                        modifier = Modifier.padding(start = 55.dp)
-                    )
-                }
+                    textAlign = TextAlign.Center
+                )
 
                 Spacer(Modifier.height(16.dp))
 

@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.material.icons.Icons
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import com.fit2081.yeeun34752110.R
 import com.fit2081.yeeun34752110.AppViewModelFactory
@@ -142,7 +143,13 @@ fun HomePage(userId: Int, navController: NavHostController, modifier: Modifier =
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier.clickable {
-                                navController.navigate("insights")
+                                navController.navigate("insights") {
+                                    popUpTo(navController.graph.findStartDestination().route ?: "home") {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
                             }
                         ) {
                             Text("See all scores", fontSize = 15.sp, color = Color.Gray)
