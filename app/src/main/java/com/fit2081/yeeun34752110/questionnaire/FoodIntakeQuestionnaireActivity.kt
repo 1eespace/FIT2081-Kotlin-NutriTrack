@@ -113,12 +113,13 @@ fun QuestionnairePage(
         },
     ) { innerPadding ->
         LazyColumn(
-            modifier = modifier
+            modifier = Modifier
+                .fillMaxSize()
                 .padding(innerPadding)
-                .padding(horizontal = 16.dp)
-                .fillMaxSize(),
-
-            contentPadding = PaddingValues(vertical = 32.dp)
+                .padding(horizontal = 16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            contentPadding = PaddingValues(bottom = 32.dp)
         ) {
             item {
                 Column(
