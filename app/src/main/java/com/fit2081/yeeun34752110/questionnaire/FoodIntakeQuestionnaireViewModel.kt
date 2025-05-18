@@ -1,5 +1,6 @@
 package com.fit2081.yeeun34752110.questionnaire
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fit2081.yeeun34752110.databases.AuthManager
@@ -141,7 +142,8 @@ class FoodIntakeQuestionnaireViewModel(val repository: FoodIntakeRepository) : V
                     isDataLoaded = true
                 }
             } catch (e: Exception) {
-                // Error handling (e.g., logging) if needed
+                // Error handling
+                Log.e("FoodIntakeViewModel", "Failed to load existing intake", e)
             }
         }
     }
