@@ -161,13 +161,17 @@ fun RegisterPage(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Phone
+                // Phone: Just DIGITS
                 OutlinedTextField(
                     value = phone,
-                    onValueChange = { viewModel.updatePhone(it) },
+                    onValueChange = { newValue ->
+                        if (newValue.all { it.isDigit() }) {
+                            viewModel.updatePhone(newValue)
+                        }
+                    },
                     label = { Text("Phone Number") },
                     placeholder = { Text("Enter your phone number") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier.fillMaxWidth()
                 )
 
