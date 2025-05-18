@@ -13,8 +13,7 @@ import com.fit2081.yeeun34752110.databases.patientdb.PatientDao
 
 @Database(
     entities = [Patient::class, FoodIntake::class, NutriCoachTips::class],
-    version = 1,
-    exportSchema = false
+    version = 1
 )
 abstract class AppDataBase : RoomDatabase() {
 
