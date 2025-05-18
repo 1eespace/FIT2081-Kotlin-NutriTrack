@@ -34,7 +34,6 @@ import com.fit2081.yeeun34752110.navigation.AppNavHost
 import com.fit2081.yeeun34752110.navigation.BottomNavBar
 import com.fit2081.yeeun34752110.ui.theme.NutriTrackTheme
 
-
 class MainActivity : ComponentActivity() {
     private val viewModel: MainViewModel by lazy {
         ViewModelProvider(this)[MainViewModel::class.java]
