@@ -95,7 +95,12 @@ fun QuestionnairePage(
     val context = LocalContext.current
     val viewModel: FoodIntakeQuestionnaireViewModel = viewModel(
         factory = AppViewModelFactory(context)
+
     )
+
+    val wakeTime by viewModel.wakeTime.collectAsState()
+    val mealTime by viewModel.biggestMealTime.collectAsState()
+    val sleepTime by viewModel.sleepTime.collectAsState()
 
     // Load saved data so user can edit
     LaunchedEffect(patientId) {
@@ -145,35 +150,40 @@ fun QuestionnairePage(
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.align(Alignment.Start)
                     )
-                    MealTimePicker("Time you sleep?", "sleep", viewModel)
-                    MealTimePicker("Time you wake up?", "wake", viewModel)
-                    MealTimePicker("Time of your biggest meal?", "meal", viewModel)
+
+                    MealTimePicker(
+                        label = "Time you sleep?",
+                        time = sleepTime,
+                        onTimeSelected = { viewModel.updateMealTime("sleep", it) }
+                    )
+
+                    MealTimePicker(
+                        label = "Time you wake up?",
+                        time = wakeTime,
+                        onTimeSelected = { viewModel.updateMealTime("wake", it) }
+                    )
+
+                    MealTimePicker(
+                        label = "Time of your biggest meal?",
+                        time = mealTime,
+                        onTimeSelected = { viewModel.updateMealTime("meal", it) }
+                    )
 
                     Spacer(modifier = Modifier.height(24.dp))
 
                     // Save button
                     Button(
                         onClick = {
-                            val wake = viewModel.wakeTime
-                            val meal = viewModel.biggestMealTime
-                            val sleep = viewModel.sleepTime
-
-                            if (!isTimeOrderValid(wake, meal, sleep)) {
+                            if (!isTimeOrderValid(sleepTime, wakeTime, mealTime)) {
                                 Toast.makeText(
                                     context,
-                                    "Your biggest meal time must be between wake up time and sleep time.",
+                                    "Please ensure that your sleep time comes before wake-up time, and your wake-up time comes before your biggest meal time.",
                                     Toast.LENGTH_LONG
                                 ).show()
                                 return@Button
                             }
 
                             viewModel.saveFoodIntake(
-                                userId = patientId,
-                                selectedCategories = viewModel.selectedCategories,
-                                biggestMealTime = meal,
-                                sleepTime = sleep,
-                                wakeTime = wake,
-                                selectedPersona = viewModel.selectedPersona,
                                 onSuccess = {
                                     context.startActivity(Intent(context, HomeActivity::class.java).apply {
                                         addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
@@ -239,7 +249,7 @@ fun HeaderTopAppBar(
 
 @Composable
 fun FoodCategorySelection(viewModel: FoodIntakeQuestionnaireViewModel) {
-    val selectedCategories = viewModel.selectedCategories
+    val selectedCategories by viewModel.selectedCategories.collectAsState()
 
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
@@ -268,7 +278,7 @@ fun FoodCategorySelection(viewModel: FoodIntakeQuestionnaireViewModel) {
                         Checkbox(
                             checked = selectedCategories[category] ?: false,
                             onCheckedChange = { isChecked ->
-                                selectedCategories[category] = isChecked
+                                viewModel.toggleCategory(category, isChecked)
                             }
                         )
                         Text(text = category, fontSize = 11.sp)
@@ -283,10 +293,10 @@ fun FoodCategorySelection(viewModel: FoodIntakeQuestionnaireViewModel) {
 // Persona selection
 @Composable
 fun PersonaSelection(viewModel: FoodIntakeQuestionnaireViewModel) {
-    val selectedPersona = viewModel.selectedPersona
-    val showModal = viewModel.showPersonaModal
-    val selectedModalPersona = viewModel.selectedModalPersona
-    val expanded = viewModel.personaDropdownExpanded
+    val selectedPersona by viewModel.selectedPersona.collectAsState()
+    val showModal by viewModel.showPersonaModal.collectAsState()
+    val selectedModalPersona by viewModel.selectedModalPersona.collectAsState()
+    val expanded by viewModel.personaDropdownExpanded.collectAsState()
 
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -391,14 +401,15 @@ fun PersonaSelection(viewModel: FoodIntakeQuestionnaireViewModel) {
                 }
             }
         }
-
-        if (showModal && selectedModalPersona != null) {
-            ShowPersonaModal(
-                personaName = selectedModalPersona,
-                personaDescription = personaDescriptions[selectedModalPersona] ?: "No description available.",
-                personaImage = painterResource(id = personaImages[selectedModalPersona] ?: R.drawable.default_image),
-                onDismiss = { viewModel.togglePersonaModal(false) }
-            )
+        if (showModal) {
+            selectedModalPersona?.let { persona ->
+                ShowPersonaModal(
+                    personaName = persona,
+                    personaDescription = personaDescriptions[persona] ?: "No description available.",
+                    personaImage = painterResource(id = personaImages[persona] ?: R.drawable.default_image),
+                    onDismiss = { viewModel.togglePersonaModal(false) }
+                )
+            }
         }
     }
 }
@@ -457,16 +468,12 @@ fun ShowPersonaModal(
     )
 }
 
-
 @Composable
-fun MealTimePicker(label: String, key: String, viewModel: FoodIntakeQuestionnaireViewModel) {
-    val time = when (key) {
-        "meal" -> viewModel.biggestMealTime
-        "sleep" -> viewModel.sleepTime
-        "wake" -> viewModel.wakeTime
-        else -> ""
-    }
-
+fun MealTimePicker(
+    label: String,
+    time: String,
+    onTimeSelected: (String) -> Unit
+) {
     val context = LocalContext.current
 
     Row(
@@ -480,9 +487,7 @@ fun MealTimePicker(label: String, key: String, viewModel: FoodIntakeQuestionnair
 
         Button(
             onClick = {
-                showTimePicker(context, time) {
-                    viewModel.updateMealTime(key, it)
-                }
+                showTimePicker(context, time, onTimeSelected)
             },
             colors = ButtonDefaults.buttonColors(containerColor = Color.White),
             modifier = Modifier.width(120.dp)
@@ -498,6 +503,7 @@ fun MealTimePicker(label: String, key: String, viewModel: FoodIntakeQuestionnair
         }
     }
 }
+
 
 fun formatTimeToDisplay(time24: String): String {
     return try {
@@ -544,8 +550,11 @@ fun isTimeOrderValid(wake: String, meal: String, sleep: String): Boolean {
         val mealMins = convertToMinutes(meal)
         val sleepMins = convertToMinutes(sleep)
 
-        // Time order: wake < meal < sleep
-        wakeMins < mealMins && mealMins < sleepMins
+        val adjustedWake = wakeMins
+        val adjustedMeal = if (mealMins < wakeMins) mealMins + 1440 else mealMins  // Next Day
+        val adjustedSleep = if (sleepMins < adjustedMeal) sleepMins + 1440 else sleepMins  // Next Day
+
+        adjustedWake < adjustedMeal && adjustedMeal < adjustedSleep
     } catch (e: Exception) {
         false
     }

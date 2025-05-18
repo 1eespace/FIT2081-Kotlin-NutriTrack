@@ -1,100 +1,109 @@
 package com.fit2081.yeeun34752110.questionnaire
 
-import androidx.compose.runtime.mutableStateMapOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fit2081.yeeun34752110.databases.AuthManager
 import com.fit2081.yeeun34752110.databases.foodintakedb.FoodIntake
 import com.fit2081.yeeun34752110.databases.foodintakedb.FoodIntakeRepository
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 
-class FoodIntakeQuestionnaireViewModel (val repository: FoodIntakeRepository) : ViewModel() {
+class FoodIntakeQuestionnaireViewModel(val repository: FoodIntakeRepository) : ViewModel() {
 
     // --- Food category selections ---
-    var selectedCategories = mutableStateMapOf<String, Boolean>().apply {
+    private val _selectedCategories = MutableStateFlow(
         listOf(
             "Fruits", "Vegetables", "Grains", "Red Meat", "Seafood",
             "Poultry", "Fish", "Eggs", "Nuts/Seeds"
-        ).forEach { put(it, false) }
+        ).associateWith { false }
+    )
+    val selectedCategories: StateFlow<Map<String, Boolean>> = _selectedCategories.asStateFlow()
+
+    fun toggleCategory(category: String, isChecked: Boolean) {
+        _selectedCategories.value = _selectedCategories.value.toMutableMap().apply {
+            this[category] = isChecked
+        }
     }
-        private set
 
     // --- Persona and Dropdown ---
-    var selectedPersona by mutableStateOf("Health Devotee")
-        private set
-    var showPersonaModal by mutableStateOf(false)
-        private set
-    var selectedModalPersona by mutableStateOf<String?>(null)
-        private set
-    var personaDropdownExpanded by mutableStateOf(false)
-        private set
+    private val _selectedPersona = MutableStateFlow("Health Devotee")
+    val selectedPersona: StateFlow<String> = _selectedPersona.asStateFlow()
 
-    // --- TimePickers ---
-    var biggestMealTime by mutableStateOf("12:00")
-        private set
-    var sleepTime by mutableStateOf("23:00")
-        private set
-    var wakeTime by mutableStateOf("07:00")
-        private set
+    private val _showPersonaModal = MutableStateFlow(false)
+    val showPersonaModal: StateFlow<Boolean> = _showPersonaModal.asStateFlow()
+
+    private val _selectedModalPersona = MutableStateFlow<String?>(null)
+    val selectedModalPersona: StateFlow<String?> = _selectedModalPersona.asStateFlow()
+
+    private val _personaDropdownExpanded = MutableStateFlow(false)
+    val personaDropdownExpanded: StateFlow<Boolean> = _personaDropdownExpanded.asStateFlow()
 
     fun updateSelectedPersona(value: String) {
-        selectedPersona = value
+        _selectedPersona.value = value
     }
 
     fun togglePersonaModal(show: Boolean, persona: String? = null) {
-        showPersonaModal = show
-        selectedModalPersona = persona
+        _showPersonaModal.value = show
+        _selectedModalPersona.value = persona
     }
 
     fun toggleDropdown(expand: Boolean) {
-        personaDropdownExpanded = expand
+        _personaDropdownExpanded.value = expand
     }
+
+    // --- TimePickers ---
+    private val _biggestMealTime = MutableStateFlow("12:00")
+    val biggestMealTime: StateFlow<String> = _biggestMealTime.asStateFlow()
+
+    private val _sleepTime = MutableStateFlow("23:00")
+    val sleepTime: StateFlow<String> = _sleepTime.asStateFlow()
+
+    private val _wakeTime = MutableStateFlow("07:00")
+    val wakeTime: StateFlow<String> = _wakeTime.asStateFlow()
 
     fun updateMealTime(label: String, time: String) {
         when (label) {
-            "meal" -> biggestMealTime = time
-            "sleep" -> sleepTime = time
-            "wake" -> wakeTime = time
+            "meal" -> _biggestMealTime.value = time
+            "sleep" -> _sleepTime.value = time
+            "wake" -> _wakeTime.value = time
         }
     }
 
     fun saveFoodIntake(
-        userId: Int,
-        selectedCategories: Map<String, Boolean>,
-        biggestMealTime: String,
-        sleepTime: String,
-        wakeTime: String,
-        selectedPersona: String,
         onSuccess: () -> Unit,
         onError: (String) -> Unit
     ) {
-        if (selectedCategories.values.none { it }) {
+        val selectedCategoriesMap = selectedCategories.value
+        val meal = biggestMealTime.value
+        val sleep = sleepTime.value
+        val wake = wakeTime.value
+        val persona = selectedPersona.value
+
+        if (selectedCategoriesMap.values.none { it }) {
             onError("Please select at least one food category!")
             return
         }
 
-        if (hasDuplicateTimes(biggestMealTime, sleepTime, wakeTime)) {
+        if (hasDuplicateTimes(meal, sleep, wake)) {
             onError("Meal, sleep, and wake times must all be different!")
             return
         }
 
         val intake = FoodIntake(
-            patientId = userId,
-            sleepTime = sleepTime,
-            wakeTime = wakeTime,
-            biggestMealTime = biggestMealTime,
-            selectedPersona = selectedPersona,
-            intakeFruits = selectedCategories["Fruits"] ?: false,
-            intakeVegetables = selectedCategories["Vegetables"] ?: false,
-            intakeGrains = selectedCategories["Grains"] ?: false,
-            intakeRedMeat = selectedCategories["Red Meat"] ?: false,
-            intakeSeafood = selectedCategories["Seafood"] ?: false,
-            intakePoultry = selectedCategories["Poultry"] ?: false,
-            intakeFish = selectedCategories["Fish"] ?: false,
-            intakeEggs = selectedCategories["Eggs"] ?: false,
-            intakeNutsOrSeeds = selectedCategories["Nuts/Seeds"] ?: false
+            patientId = AuthManager.getPatientId()?.toIntOrNull() ?: -1,
+            sleepTime = sleep,
+            wakeTime = wake,
+            biggestMealTime = meal,
+            selectedPersona = persona,
+            intakeFruits = selectedCategoriesMap["Fruits"] ?: false,
+            intakeVegetables = selectedCategoriesMap["Vegetables"] ?: false,
+            intakeGrains = selectedCategoriesMap["Grains"] ?: false,
+            intakeRedMeat = selectedCategoriesMap["Red Meat"] ?: false,
+            intakeSeafood = selectedCategoriesMap["Seafood"] ?: false,
+            intakePoultry = selectedCategoriesMap["Poultry"] ?: false,
+            intakeFish = selectedCategoriesMap["Fish"] ?: false,
+            intakeEggs = selectedCategoriesMap["Eggs"] ?: false,
+            intakeNutsOrSeeds = selectedCategoriesMap["Nuts/Seeds"] ?: false
         )
 
         viewModelScope.launch {
@@ -112,24 +121,27 @@ class FoodIntakeQuestionnaireViewModel (val repository: FoodIntakeRepository) : 
             try {
                 val intake = repository.getFoodIntakeByPatientId(patientId)
                 intake?.let {
-                    sleepTime = it.sleepTime
-                    wakeTime = it.wakeTime
-                    biggestMealTime = it.biggestMealTime
-                    selectedPersona = it.selectedPersona
+                    _sleepTime.value = it.sleepTime
+                    _wakeTime.value = it.wakeTime
+                    _biggestMealTime.value = it.biggestMealTime
+                    _selectedPersona.value = it.selectedPersona
 
-                    selectedCategories["Fruits"] = it.intakeFruits
-                    selectedCategories["Vegetables"] = it.intakeVegetables
-                    selectedCategories["Grains"] = it.intakeGrains
-                    selectedCategories["Red Meat"] = it.intakeRedMeat
-                    selectedCategories["Seafood"] = it.intakeSeafood
-                    selectedCategories["Poultry"] = it.intakePoultry
-                    selectedCategories["Fish"] = it.intakeFish
-                    selectedCategories["Eggs"] = it.intakeEggs
-                    selectedCategories["Nuts/Seeds"] = it.intakeNutsOrSeeds
+                    _selectedCategories.value = mapOf(
+                        "Fruits" to it.intakeFruits,
+                        "Vegetables" to it.intakeVegetables,
+                        "Grains" to it.intakeGrains,
+                        "Red Meat" to it.intakeRedMeat,
+                        "Seafood" to it.intakeSeafood,
+                        "Poultry" to it.intakePoultry,
+                        "Fish" to it.intakeFish,
+                        "Eggs" to it.intakeEggs,
+                        "Nuts/Seeds" to it.intakeNutsOrSeeds
+                    )
 
                     isDataLoaded = true
                 }
             } catch (e: Exception) {
+                // Error handling (e.g., logging) if needed
             }
         }
     }

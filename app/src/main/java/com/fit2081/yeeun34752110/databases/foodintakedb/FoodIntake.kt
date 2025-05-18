@@ -27,14 +27,15 @@ data class FoodIntake(
     var selectedPersona: String = "",
 
     // Food category checkboxes
-    var intakePoultry: Boolean = false,
-    var intakeSeafood: Boolean = false,
-    var intakeEggs: Boolean = false,
-    var intakeVegetables: Boolean = false,
-    var intakeNutsOrSeeds: Boolean = false,
-    var intakeRedMeat: Boolean = false,
     var intakeFruits: Boolean = false,
+    var intakeVegetables: Boolean = false,
+    var intakeGrains: Boolean = false,
+    var intakeRedMeat: Boolean = false,
+    var intakeSeafood: Boolean = false,
+    var intakePoultry: Boolean = false,
     var intakeFish: Boolean = false,
-    var intakeGrains: Boolean = false
+    var intakeEggs: Boolean = false,
+    var intakeNutsOrSeeds: Boolean = false
+
 
 )
