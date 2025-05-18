@@ -10,6 +10,9 @@ import com.fit2081.yeeun34752110.genai.GenAiViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
+// ClinicianKey
+const val CLINICIAN_KEY= "dollar-entry-apples"
+
 class ClinicianViewModel(private val repository: PatientRepository) : ViewModel() {
 
     private val _patient = MutableStateFlow<Patient?>(null)
@@ -25,7 +28,7 @@ class ClinicianViewModel(private val repository: PatientRepository) : ViewModel(
     }
 
     fun clinicianLogin(): Boolean {
-        return clinicianKey == "dollar-entry-apples"
+        return clinicianKey == CLINICIAN_KEY
     }
 
     // --- Avg Score ---
