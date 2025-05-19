@@ -13,10 +13,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
@@ -64,6 +70,7 @@ fun InsightsPage(
     }
 
     val patient by viewModel.patient.collectAsState()
+    val fruitsScore by viewModel.fruitsScore.collectAsState()
 
     patient?.let { data ->
         val categories = listOf(
@@ -144,48 +151,127 @@ fun InsightsPage(
                         )
                     )
 
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(24.dp))
 
-                    // Share button
-                    Button(
-                        onClick = {
-                            val userScores = categories.associate { it.first to it.second.first }
-                            viewModel.sharingInsights(
-                                context,
-                                userScores,
-                                totalScore,
-                                totalMaxScore.toFloat()
-                            )
-                        },
+                    // Update Fruits Score
+                    Card(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .height(48.dp),
-                        shape = RectangleShape,
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF056207))
+                            .fillMaxWidth(),
+                        colors = CardDefaults.cardColors(containerColor = Color.White),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                     ) {
-                        Text("Share with someone", color = Color.White)
+                        Column(modifier = Modifier.padding(16.dp)) {
+                            // Give motivation to users for fruits optimal score
+                            Text(
+                                text = "Reach 10 to unlock a surprise from your NutriCoach!",
+                                fontSize = 14.sp,
+                                color = Color(0xFF056207),
+                                fontWeight = FontWeight.Medium,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(bottom = 4.dp)
+                            )
+
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text(
+                                    text = "Improve My Fruits Score",
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 16.sp
+                                )
+                                Text(
+                                    text = String.format("%.1f", fruitsScore),
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+
+                            Slider(
+                                value = fruitsScore,
+                                onValueChange = { viewModel.onFruitsScoreChange(it) },
+                                valueRange = 0f..10f,
+                                steps = 9,
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = SliderDefaults.colors(
+                                    thumbColor = Color(0xFF203A84),
+                                    activeTrackColor = Color(0xFF203A84)
+                                )
+                            )
+
+                            Text(
+                                text = "Eating at least 2 servings of 2 diverse fruits daily helps you reach the optimal score (10/10) — try it out!",
+                                fontSize = 14.sp,
+                                color = Color(0xFF056207),
+                                fontWeight = FontWeight.Medium,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(bottom = 4.dp)
+                            )
+
+                            Button(
+                                onClick = {
+                                    viewModel.updateFruitsScore(data.patientId, viewModel.fruitsScore.value)
+                                },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(48.dp),
+                                shape = RectangleShape,
+                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF056207))
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.CheckCircle,
+                                    contentDescription = "Save Icon",
+                                    tint = Color.White
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text("Try It Out!", color = Color.White)
+                            }
+                        }
                     }
 
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(24.dp))
 
-                    // Navigate to nutrition coaching
-                    Button(
-                        onClick = {
-                            navController.navigate("nutricoach") {
-                                popUpTo(navController.graph.findStartDestination().route ?: "home") {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                        },
+                    Row(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .height(48.dp),
-                        shape = RectangleShape,
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF056207))
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Text("Improve my diet!", color = Color.White)
+                        // Share Button
+                        Button(
+                            onClick = {
+                                val userScores = categories.associate { it.first to it.second.first }
+                                viewModel.sharingInsights(
+                                    context,
+                                    userScores,
+                                    totalScore,
+                                    totalMaxScore.toFloat()
+                                )
+                            },
+                            modifier = Modifier.weight(1f).height(48.dp),
+                            shape = RectangleShape,
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF056207))
+                        ) {
+                            Text("Share with someone", color = Color.White)
+                        }
+
+                        // Navigate Button
+                        Button(
+                            onClick = {
+                                navController.navigate("nutricoach") {
+                                    popUpTo(navController.graph.findStartDestination().route ?: "home") {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            },
+                            modifier = Modifier.weight(1f).height(48.dp),
+                            shape = RectangleShape,
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF056207))
+                        ) {
+                            Text("Improve my diet!", color = Color.White)
+                        }
                     }
                 }
             }

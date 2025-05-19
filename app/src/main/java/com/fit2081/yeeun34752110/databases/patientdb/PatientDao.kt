@@ -41,6 +41,10 @@ interface PatientDao {
     @Query("SELECT patientId FROM patients")
     fun getAllPatientIds(): Flow<List<Int>>
 
+    // Update the patient's fruit score for making optimal
+    @Query("UPDATE patients SET fruits = :newFruitsScore WHERE patientId = :id")
+    suspend fun updateFruitsScore(id: Int, newFruitsScore: Float)
+
     // Delete all
     @Query("DELETE FROM patients")
     suspend fun deleteAllPatients()

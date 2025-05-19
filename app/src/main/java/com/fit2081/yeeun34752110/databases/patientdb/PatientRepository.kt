@@ -36,4 +36,9 @@ class PatientRepository(private val patientDao: PatientDao) {
         return patientDao.getAllPatients().first()
     }
 
+    // Update fruit score (manually)
+    suspend fun updateFruitsScore(patientId: Int, newFruitsScore: Float) {
+        patientDao.updateFruitsScore(patientId, newFruitsScore)
+    }
+
 }
