@@ -1,5 +1,6 @@
 package com.fit2081.yeeun34752110.auth
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -51,6 +52,7 @@ class LoginActivity : ComponentActivity() {
     }
 }
 
+@SuppressLint("ConfigurationScreenWidthHeight")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginPage(
@@ -207,7 +209,7 @@ fun LoginPage(
                     onClick = {
                         if (selectedUserId.isNotEmpty() && password.isNotEmpty()) {
                             viewModel.loginSuccessful.value = false
-                            viewModel.loginFun(selectedUserId, password, context)
+                            viewModel.loginFun(selectedUserId, password)
                         } else {
                             Toast.makeText(
                                 context,

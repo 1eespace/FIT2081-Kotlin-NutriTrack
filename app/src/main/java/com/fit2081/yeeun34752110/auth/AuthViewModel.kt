@@ -98,7 +98,7 @@ class AuthViewModel(private val repository: PatientRepository) : ViewModel() {
     // -------------------------------
     // Login Logic
     // -------------------------------
-    fun loginFun(userId: String, password: String, context: Context) {
+    fun loginFun(userId: String, password: String) {
         viewModelScope.launch {
             loginSuccessful.value = false
 
