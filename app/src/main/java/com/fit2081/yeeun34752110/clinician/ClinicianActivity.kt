@@ -14,13 +14,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -34,6 +39,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -101,6 +107,18 @@ fun ClinicianPage(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
+                Text(
+                    text = "This dashboard shows average HEIFA scores by gender and allows AI-powered data analysis.",
+                    fontSize = 14.sp,
+                    color = Color(0xFF056207),
+                    fontWeight = FontWeight.SemiBold,
+                    lineHeight = 20.sp,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp),
+                    textAlign = TextAlign.Start
+                )
+
                 // HEIFA Score Card
                 Card(
                     modifier = Modifier.fillMaxWidth(),
@@ -127,19 +145,51 @@ fun ClinicianPage(
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "Tap 'Find Data Pattern' to uncover key dietary insights",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Medium,
+                    lineHeight = 20.sp,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp),
+                    textAlign = TextAlign.Start
+                )
 
-                // Pattern Button
-                Button(
-                    onClick = {
-                        coroutineScope.launch {
-                            viewModel.generateAiPatterns(genAiViewModel)
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth().height(48.dp),
-                    shape = RectangleShape,
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF056207))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("Find Data Pattern", color = Color.White)
+                    Button(
+                        onClick = {
+                            coroutineScope.launch {
+                                viewModel.generateAiPatterns(genAiViewModel)
+                            }
+                        },
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(48.dp),
+                        shape = RectangleShape,
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF056207))
+                    ) {
+                        Text("Find Data Pattern", color = Color.White)
+                    }
+
+                    IconButton(
+                        onClick = {
+                            viewModel.clearDataPatterns()
+                            // Refresh the dataPattern
+                            genAiViewModel.clearUiState()
+                        },
+                        modifier = Modifier.size(48.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Refresh,
+                            contentDescription = "Clear",
+                            tint = Color.Gray
+                        )
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -147,38 +197,44 @@ fun ClinicianPage(
                 // Pattern Results
                 when (uiState) {
                     is UiState.Loading -> {
-                        Text("Analyzing data patterns...", fontStyle = FontStyle.Italic)
+                        Text("Analysing data patterns...", fontStyle = FontStyle.Italic)
                     }
 
                     is UiState.Success -> {
                         val result = (uiState as UiState.Success).outputText
                         viewModel.handleAiResponse(result)
 
-                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                            dataPatterns.forEachIndexed { index, pattern ->
-                                Card(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    shape = RoundedCornerShape(10.dp),
-                                    elevation = CardDefaults.cardElevation(2.dp),
-                                    colors = CardDefaults.cardColors(
-                                        containerColor = Color(
-                                            0xFFF7F7F7
+                        if (dataPatterns.isEmpty()) {
+                            Text(
+                                text = "No data patterns yet.",
+                                fontStyle = FontStyle.Italic,
+                                color = Color.Gray
+                            )
+                        } else {
+                            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                dataPatterns.forEachIndexed { index, pattern ->
+                                    Card(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        shape = RoundedCornerShape(10.dp),
+                                        elevation = CardDefaults.cardElevation(2.dp),
+                                        colors = CardDefaults.cardColors(
+                                            containerColor = Color(0xFFF7F7F7)
                                         )
-                                    )
-                                ) {
-                                    Column(modifier = Modifier.padding(12.dp)) {
-                                        Text(
-                                            text = "Insight ${index + 1}",
-                                            fontWeight = FontWeight.Bold,
-                                            fontSize = 15.sp,
-                                            color = Color(0xFF333333)
-                                        )
-                                        Spacer(modifier = Modifier.height(4.dp))
-                                        Text(
-                                            text = pattern.trim(),
-                                            fontSize = 14.sp,
-                                            color = Color.DarkGray
-                                        )
+                                    ) {
+                                        Column(modifier = Modifier.padding(12.dp)) {
+                                            Text(
+                                                text = "Insight ${index + 1}",
+                                                fontWeight = FontWeight.Bold,
+                                                fontSize = 15.sp,
+                                                color = Color(0xFF333333)
+                                            )
+                                            Spacer(modifier = Modifier.height(4.dp))
+                                            Text(
+                                                text = pattern.trim(),
+                                                fontSize = 14.sp,
+                                                color = Color.DarkGray
+                                            )
+                                        }
                                     }
                                 }
                             }
@@ -190,7 +246,13 @@ fun ClinicianPage(
                         Text("Error: $error", color = Color.Red, fontSize = 14.sp)
                     }
 
-                    else -> {}
+                    is UiState.Initial -> {
+                        Text(
+                            text = "No data patterns yet.",
+                            fontStyle = FontStyle.Italic,
+                            color = Color.Gray
+                        )
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))

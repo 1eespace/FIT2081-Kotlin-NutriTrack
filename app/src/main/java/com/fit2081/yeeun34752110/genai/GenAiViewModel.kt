@@ -57,4 +57,10 @@ class GenAiViewModel(
             }
         }
     }
+
+    // ClearUiState
+    fun clearUiState() {
+        _uiState.value = UiState.Initial
+    }
+
 }

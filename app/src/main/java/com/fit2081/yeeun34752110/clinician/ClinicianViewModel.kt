@@ -65,6 +65,11 @@ class ClinicianViewModel(private val repository: PatientRepository) : ViewModel(
         _dataPatterns.value = aiText.split("\n").filter { it.isNotBlank() }.take(3)
     }
 
+    // Refresh the dataPatterns
+    fun clearDataPatterns() {
+        _dataPatterns.value = emptyList()
+    }
+
     suspend fun generateAiPatterns(genAiViewModel: GenAiViewModel) {
         val patients = repository.getAllPatientsOnce()
         val prompt = PatternsPromptTemplates.getRandomPrompt(patients)
