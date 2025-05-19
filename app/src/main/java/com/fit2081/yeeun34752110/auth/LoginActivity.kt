@@ -11,6 +11,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
@@ -21,6 +23,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.*
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -61,6 +64,8 @@ fun LoginPage(
 
     val selectedUserId = viewModel.selectedUserId
     val password = viewModel.password
+    // Password visibility state
+    var showPassword by remember { mutableStateOf(false) }
     val expanded = viewModel.expanded
     val userIds by viewModel.patientIds.collectAsState(initial = emptyList())
     val loginSuccess = viewModel.loginSuccessful.value
@@ -142,7 +147,7 @@ fun LoginPage(
                             DropdownMenuItem(
                                 text = { Text(userId.toString()) },
                                 onClick = {
-                                    viewModel.updateSelectedUserId(userId.toString())
+                                    viewModel.selectedUserId(userId.toString())
                                     viewModel.dismissDropdown()
                                 }
                             )
@@ -157,10 +162,23 @@ fun LoginPage(
                     onValueChange = { viewModel.updatePassword(it) },
                     label = { Text("Password") },
                     placeholder = { Text("Enter your password") },
-                    visualTransformation = PasswordVisualTransformation(),
+                    visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                    modifier = Modifier.fillMaxWidth(),
-                    isError = loginMessage != null && loginSuccess == false
+                    isError = loginMessage != null && loginSuccess == false,
+                    trailingIcon = {
+                        val visibilityIcon = if (showPassword) {
+                            Icons.Filled.Visibility
+                        } else {
+                            Icons.Filled.VisibilityOff
+                        }
+                        IconButton(onClick = { showPassword = !showPassword }) {
+                            Icon(
+                                imageVector = visibilityIcon,
+                                contentDescription = if (showPassword) "Hide password" else "Show password"
+                            )
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth()
                 )
 
                 if (loginMessage != null && loginSuccess == false) {

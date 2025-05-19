@@ -39,7 +39,7 @@ class AuthViewModel(private val repository: PatientRepository) : ViewModel() {
     var loginMessage = mutableStateOf<String?>(null)
         private set
 
-    fun updateSelectedUserId(id: String) {
+    fun selectedUserId(id: String) {
         selectedUserId = id
     }
 
@@ -64,35 +64,35 @@ class AuthViewModel(private val repository: PatientRepository) : ViewModel() {
         private set
     var confirmPassword by mutableStateOf("")
         private set
-    var regDropdownExpanded by mutableStateOf(false)
+    var registerDropdownExpanded by mutableStateOf(false)
         private set
     var registrationSuccessful = mutableStateOf(false)
         private set
     var registrationMessage = mutableStateOf<String?>(null)
         private set
 
-    fun updateRegUserId(id: String) {
+    fun typeUserId(id: String) {
         selectedUserId = id
     }
 
-    fun updateName(nane: String) {
+    fun typeName(nane: String) {
         name = nane
     }
 
-    fun updatePhone(phoneNum: String) {
+    fun typePhone(phoneNum: String) {
         phone = phoneNum
     }
 
-    fun updateConfirmPassword(pw: String) {
+    fun typeConfirmPassword(pw: String) {
         confirmPassword = pw
     }
 
-    fun toggleRegDropdown() {
-        regDropdownExpanded = !regDropdownExpanded
+    fun toggleRegisterDropdown() {
+        registerDropdownExpanded = !registerDropdownExpanded
     }
 
-    fun dismissRegDropdown() {
-        regDropdownExpanded = false
+    fun dismissRegisterDropdown() {
+        registerDropdownExpanded = false
     }
 
     // -------------------------------

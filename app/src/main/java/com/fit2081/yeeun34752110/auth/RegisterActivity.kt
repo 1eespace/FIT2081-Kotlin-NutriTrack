@@ -1,5 +1,6 @@
 package com.fit2081.yeeun34752110.auth
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -49,6 +50,7 @@ class RegisterActivity : ComponentActivity() {
     }
 }
 
+@SuppressLint("ConfigurationScreenWidthHeight")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterPage(
@@ -63,7 +65,7 @@ fun RegisterPage(
     val phone = viewModel.phone
     val password = viewModel.password
     val confirmPassword = viewModel.confirmPassword
-    val expanded = viewModel.regDropdownExpanded
+    val expanded = viewModel.registerDropdownExpanded
     val userIds by viewModel.patientIds.collectAsState(initial = emptyList())
     val message = viewModel.registrationMessage.value
 
@@ -119,7 +121,7 @@ fun RegisterPage(
                 // User ID dropdown
                 ExposedDropdownMenuBox(
                     expanded = expanded,
-                    onExpandedChange = { viewModel.toggleRegDropdown() }
+                    onExpandedChange = { viewModel.toggleRegisterDropdown() }
                 ) {
                     OutlinedTextField(
                         value = selectedUserId,
@@ -135,14 +137,14 @@ fun RegisterPage(
 
                     ExposedDropdownMenu(
                         expanded = expanded,
-                        onDismissRequest = { viewModel.dismissRegDropdown() }
+                        onDismissRequest = { viewModel.dismissRegisterDropdown() }
                     ) {
                         userIds.forEach { userId ->
                             DropdownMenuItem(
                                 text = { Text(userId.toString()) },
                                 onClick = {
-                                    viewModel.updateRegUserId(userId.toString())
-                                    viewModel.dismissRegDropdown()
+                                    viewModel.typeUserId(userId.toString())
+                                    viewModel.dismissRegisterDropdown()
                                 }
                             )
                         }
@@ -156,7 +158,7 @@ fun RegisterPage(
                     value = name,
                     onValueChange = {
                         if (it.all { c -> c.isLetter() }) {
-                            viewModel.updateName(it)
+                            viewModel.typeName(it)
                         }
                     },
                     label = { Text("Name") },
@@ -172,7 +174,7 @@ fun RegisterPage(
                     value = phone,
                     onValueChange = { newValue ->
                         if (newValue.all { it.isDigit() }) {
-                            viewModel.updatePhone(newValue)
+                            viewModel.typePhone(newValue)
                         }
                     },
                     label = { Text("Phone Number") },
@@ -205,7 +207,7 @@ fun RegisterPage(
                     value = confirmPassword,
                     onValueChange = {
                         if (it.length <= 8 && it.matches(Regex("^[A-Za-z0-9]*$"))) {
-                            viewModel.updateConfirmPassword(it)
+                            viewModel.typeConfirmPassword(it)
                         }
                     },
                     label = { Text("Confirm Password") },
