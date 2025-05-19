@@ -10,6 +10,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
@@ -20,6 +22,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.ui.unit.*
@@ -67,6 +70,9 @@ fun RegisterPage(
     // Dynamic top padding based on screen height
     val screenHeightDp = LocalConfiguration.current.screenHeightDp
     val topSpacerHeight = (screenHeightDp * 0.1f).dp
+
+    // Confirm Password (with visibility toggle)
+    var showConfirmPassword by remember { mutableStateOf(false) }
 
     // Toast on registration result
     LaunchedEffect(message) {
@@ -204,8 +210,21 @@ fun RegisterPage(
                     },
                     label = { Text("Confirm Password") },
                     placeholder = { Text("Re-enter your password") },
-                    visualTransformation = PasswordVisualTransformation(),
+                    visualTransformation = if (showConfirmPassword) VisualTransformation.None else PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                    trailingIcon = {
+                        val visibilityIcon = if (showConfirmPassword) {
+                            Icons.Filled.Visibility
+                        } else {
+                            Icons.Filled.VisibilityOff
+                        }
+                        IconButton(onClick = { showConfirmPassword = !showConfirmPassword }) {
+                            Icon(
+                                imageVector = visibilityIcon,
+                                contentDescription = if (showConfirmPassword) "Hide password" else "Show password"
+                            )
+                        }
+                    },
                     modifier = Modifier.fillMaxWidth()
                 )
 

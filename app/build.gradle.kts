@@ -77,6 +77,11 @@ dependencies {
 
     implementation("com.google.code.gson:gson:2.10.1")
 
+    // Show/Hide password toggle
+    implementation(platform("androidx.compose:compose-bom:2025.05.00"))
+    implementation("androidx.compose.material3:material3")
+    implementation ("androidx.compose.material:material-icons-extended")
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
