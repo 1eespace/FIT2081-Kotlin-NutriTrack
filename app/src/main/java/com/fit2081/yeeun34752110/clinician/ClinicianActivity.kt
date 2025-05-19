@@ -82,10 +82,10 @@ fun ClinicianPage(
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
+            .padding(bottom = 32.dp),
+        contentPadding = PaddingValues(vertical = 32.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
-        contentPadding = PaddingValues(vertical = 32.dp)
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item {
             Column(
@@ -135,7 +135,7 @@ fun ClinicianPage(
                             viewModel.generateAiPatterns(genAiViewModel)
                         }
                     },
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().height(48.dp),
                     shape = RectangleShape,
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF056207))
                 ) {
@@ -197,7 +197,7 @@ fun ClinicianPage(
 
                 // Done Button
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().height(48.dp),
                     horizontalArrangement = Arrangement.End
                 ) {
                     Button(
@@ -207,12 +207,13 @@ fun ClinicianPage(
                             }
                         },
                         modifier = Modifier
-                            .height(40.dp)
+                            .height(48.dp)
                             .widthIn(min = 80.dp),
                         shape = RectangleShape,
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF056207))
                     ) {
-                        Text("Done", color = Color.White)
+                        // Logout from Clinician Dashboard
+                        Text("End Session", color = Color.White)
                     }
                 }
             }

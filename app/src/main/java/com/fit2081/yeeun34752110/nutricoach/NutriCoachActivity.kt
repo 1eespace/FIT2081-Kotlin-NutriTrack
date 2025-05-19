@@ -196,7 +196,7 @@ fun NutriCoachPage(
                             genAiViewModel.sendPrompt(prompt, data.patientId)
                         }
                     },
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().height(48.dp),
                     shape = RectangleShape,
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF056207))
                 ) {
@@ -227,7 +227,7 @@ fun NutriCoachPage(
 
                 Button(
                     onClick = { viewModel.toggleDialog(true) },
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().height(48.dp),
                     shape = RectangleShape,
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF056207))
                 ) {
