@@ -96,17 +96,16 @@ class FoodIntakeQuestionnaireViewModel(val repository: FoodIntakeRepository) : V
             wakeTime = wake,
             biggestMealTime = meal,
             selectedPersona = persona,
-            intakeFruits = selectedCategoriesMap["Fruits"] ?: false,
-            intakeVegetables = selectedCategoriesMap["Vegetables"] ?: false,
-            intakeGrains = selectedCategoriesMap["Grains"] ?: false,
-            intakeRedMeat = selectedCategoriesMap["Red Meat"] ?: false,
-            intakeSeafood = selectedCategoriesMap["Seafood"] ?: false,
-            intakePoultry = selectedCategoriesMap["Poultry"] ?: false,
-            intakeFish = selectedCategoriesMap["Fish"] ?: false,
-            intakeEggs = selectedCategoriesMap["Eggs"] ?: false,
-            intakeNutsOrSeeds = selectedCategoriesMap["Nuts/Seeds"] ?: false
+            intakeFruits = selectedCategoriesMap["Fruits"] == true,
+            intakeVegetables = selectedCategoriesMap["Vegetables"] == true,
+            intakeGrains = selectedCategoriesMap["Grains"] == true,
+            intakeRedMeat = selectedCategoriesMap["Red Meat"] == true,
+            intakeSeafood = selectedCategoriesMap["Seafood"] == true,
+            intakePoultry = selectedCategoriesMap["Poultry"] == true,
+            intakeFish = selectedCategoriesMap["Fish"] == true,
+            intakeEggs = selectedCategoriesMap["Eggs"] == true,
+            intakeNutsOrSeeds = selectedCategoriesMap["Nuts/Seeds"] == true
         )
-
         viewModelScope.launch {
             repository.insertFoodIntake(intake)
             onSuccess()
