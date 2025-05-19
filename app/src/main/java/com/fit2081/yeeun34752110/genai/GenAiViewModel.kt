@@ -30,7 +30,8 @@ class GenAiViewModel(
 
     fun sendPrompt(
         prompt: String,
-        patientId: Int
+        patientId: Int,
+        saveToDb: Boolean = true
     ) {
         _uiState.value = UiState.Loading
 
@@ -42,11 +43,9 @@ class GenAiViewModel(
                     }
                 )
                 response.text?.let { outputContent ->
-                    // Update UI
                     _uiState.value = UiState.Success(outputContent)
 
-                    // Only save if patientId is valid
-                    if (patientId != -1) {
+                    if (saveToDb && patientId != -1) {
                         repository.insertTip(
                             NutriCoachTips(patientId = patientId, message = outputContent)
                         )

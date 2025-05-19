@@ -43,7 +43,6 @@ class AppViewModelFactory(
             }
 
             modelClass.isAssignableFrom(NutriCoachViewModel::class.java) -> {
-                // ✅ 여기를 수정: 두 개의 repository를 전달
                 NutriCoachViewModel(patientRepository, nutriCoachTipsRepository) as T
             }
 
