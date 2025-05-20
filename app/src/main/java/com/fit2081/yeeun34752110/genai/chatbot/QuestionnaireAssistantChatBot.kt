@@ -26,6 +26,12 @@ import com.fit2081.yeeun34752110.AppViewModelFactory
 import com.fit2081.yeeun34752110.genai.GenAiViewModel
 import com.fit2081.yeeun34752110.genai.UiState
 import com.fit2081.yeeun34752110.questionnaire.FoodIntakeQuestionnaireViewModel
+// Material 3: motion
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 
 /**
  * Data class to represent a chat message
@@ -187,36 +193,42 @@ fun ChatBotFABWithModal(
 
     if (showChatBot) {
         Dialog(onDismissRequest = { showChatBot = false }) {
-            Surface(
-                shape = RoundedCornerShape(16.dp),
-                tonalElevation = 10.dp,
-                color = Color.White,
-                modifier = Modifier
-                    .width(dialogWidth)
-                    .height(dialogHeight)
+            AnimatedVisibility(
+                visible = true,
+                enter = fadeIn() + scaleIn(),
+                exit = fadeOut() + scaleOut()
             ) {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    // Close button
-                    IconButton(
-                        onClick = { showChatBot = false },
-                        modifier = Modifier
-                            .align(Alignment.TopEnd)
-                            .padding(8.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Close,
-                            contentDescription = "Close",
-                            tint = Color.Gray
-                        )
-                    }
+                Surface(
+                    shape = RoundedCornerShape(16.dp),
+                    tonalElevation = 10.dp,
+                    color = Color.White,
+                    modifier = Modifier
+                        .width(dialogWidth)
+                        .height(dialogHeight)
+                ) {
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        // Close button
+                        IconButton(
+                            onClick = { showChatBot = false },
+                            modifier = Modifier
+                                .align(Alignment.TopEnd)
+                                .padding(8.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Close,
+                                contentDescription = "Close",
+                                tint = Color.Gray
+                            )
+                        }
 
-                    // ChatBot content
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(top = 48.dp, start = 16.dp, end = 16.dp, bottom = 16.dp)
-                    ) {
-                        ChatBot(patientId = patientId, questionnaireViewModel = questionnaireViewModel)
+                        // ChatBot content
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(top = 48.dp, start = 16.dp, end = 16.dp, bottom = 16.dp)
+                        ) {
+                            ChatBot(patientId = patientId, questionnaireViewModel = questionnaireViewModel)
+                        }
                     }
                 }
             }
