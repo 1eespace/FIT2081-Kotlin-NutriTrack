@@ -1,5 +1,12 @@
 package com.fit2081.yeeun34752110
 
+/**
+ * AI Use Declaration:
+ * I used ChatGPT (https://chat.openai.com/) to assist with debugging and refactoring parts of this FIT2081 A3.
+ * Specifically, ChatGPT helped identify Android Studio issues and improve my code structure.
+ * All suggestions were reviewed, tested, and modified by me to suit the this A3 assignment's requirements.
+ */
+
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
