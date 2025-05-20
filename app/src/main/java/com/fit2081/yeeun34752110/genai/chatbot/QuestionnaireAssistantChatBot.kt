@@ -33,12 +33,7 @@ import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 
 /**
- * Data class to represent a chat message
- */
-data class ChatMessage(val isUser: Boolean, val text: String)
-
-/**
- * Displays the chat interface with NutriBot assistant
+ * HD++: Displays the chat interface with NutriBot assistant
  */
 @Composable
 fun ChatBot(
@@ -131,9 +126,7 @@ fun ChatBot(
     }
 }
 
-/**
- * Floating Action Button for opening ChatBot
- */
+// Floating Action Button for opening ChatBot
 @Composable
 fun ChatBotFAB(
     onClick: () -> Unit,
@@ -159,9 +152,7 @@ fun ChatBotFAB(
     }
 }
 
-/**
- * Combines FAB and ModalBottomSheet to show ChatBot
- */
+// Combines FAB and ModalBottomSheet to show ChatBot
 @Composable
 fun ChatBotFABWithModal(
     patientId: Int,

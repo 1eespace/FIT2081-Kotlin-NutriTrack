@@ -110,7 +110,7 @@ fun HomePage(userId: Int, navController: NavHostController, modifier: Modifier =
                                 shape = RoundedCornerShape(3.dp),
                                 modifier = Modifier.height(36.dp)
                             ) {
-                                Icon(Icons.Filled.Edit, contentDescription = "Edit", modifier = Modifier.size(18.dp))
+                                Icon(Icons.Filled.Edit, contentDescription = "Edit Questionnaire", modifier = Modifier.size(18.dp))
                                 Spacer(modifier = Modifier.width(4.dp))
                                 Text("Edit", fontSize = 14.sp)
                             }
@@ -170,33 +170,22 @@ fun HomePage(userId: Int, navController: NavHostController, modifier: Modifier =
                             modifier = Modifier.fillMaxWidth(),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
+                            val arrowIcon = if (foodQualityScore >= 50) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown
+                            val arrowDescription = if (foodQualityScore >= 50) "Arrow Up" else "Arrow Down"
+
                             Box(
                                 modifier = Modifier
                                     .size(25.dp)
-                                    .background(Color(0xFF006400), shape = CircleShape)
+                                    .background(Color(0xFF006400), shape = CircleShape),
+                                contentAlignment = Alignment.Center
                             ) {
-                                // Changing the Arrow direction depends on the Quality Score
-                                val arrowIcon = if (foodQualityScore >= 50) {
-                                    Icons.Filled.KeyboardArrowUp
-                                } else {
-                                    Icons.Filled.KeyboardArrowDown
-                                }
-
-                                val arrowDescription = if (foodQualityScore >= 50) "Arrow Up" else "Arrow Down"
-
-                                Box(
-                                    modifier = Modifier
-                                        .size(25.dp)
-                                        .background(Color(0xFF006400), shape = CircleShape)
-                                ) {
-                                    Icon(
-                                        arrowIcon,
-                                        contentDescription = arrowDescription,
-                                        tint = Color.White,
-                                        modifier = Modifier.align(Alignment.Center)
-                                    )
-                                }
+                                Icon(
+                                    imageVector = arrowIcon,
+                                    contentDescription = arrowDescription,
+                                    tint = Color.White
+                                )
                             }
+
                             Spacer(modifier = Modifier.width(10.dp))
                             Text(
                                 "Your Food Quality Score",

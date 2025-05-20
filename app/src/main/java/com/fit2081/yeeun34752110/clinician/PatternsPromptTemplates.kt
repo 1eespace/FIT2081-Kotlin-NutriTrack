@@ -22,8 +22,10 @@ object PatternsPromptTemplates {
             - Water and fruit consumption trends
             - Overconsumption of discretionary foods
 
-            Write your answer as a numbered list (1–2), in a clinical tone.
+            Write your answer as a numbered list (1–3), in a clinical tone.
             Highlight only the top 3 most meaningful and actionable insights.
+            **Keep each insight concise (max 20 words) and clinically focused.**
+
             """.trimIndent()
         },
 
@@ -48,7 +50,7 @@ object PatternsPromptTemplates {
             1. ...
             2. ...
             3. ...
-            Highlight only the top 3 most meaningful and actionable insights.
+            Highlight only the top 3 most meaningful and keep each insight concise (max 20 words) and clinically focused."
             """.trimIndent()
         },
 
@@ -69,7 +71,8 @@ object PatternsPromptTemplates {
             - Balance between meat and plant-based foods
             - Areas of improvement for fruit and vegetable diversity
 
-            Use a formal and evidence-based tone suitable for clinicians.
+            Keep each insight concise (max 20 words) and clinically focused.
+            
             """.trimIndent()
         },
 
@@ -90,7 +93,7 @@ object PatternsPromptTemplates {
             - Outliers (e.g., high score with low hydration/fruit)
             - Suggestions for hydration- and fruit-linked interventions
 
-            Format as 3 short, numbered paragraphs.
+            Format as 3 short, numbered paragraphs. And, keep each insight concise (max 20 words) and clinically focused.
             """.trimIndent()
         },
 
@@ -129,7 +132,7 @@ object PatternsPromptTemplates {
             2. [Insight]
             3. [Insight]
         
-            Use a clear, focus on key 3 patterns only and professional tone tailored for a clinician dashboard.
+            Use a clear, focus on key 3 patterns only and keep each insight concise (max 20 words) and clinically focused.
             
             """.trimIndent()
         }

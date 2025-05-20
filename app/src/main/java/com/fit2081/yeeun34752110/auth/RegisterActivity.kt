@@ -98,8 +98,7 @@ fun RegisterPage(
             .fillMaxSize()
             .padding(horizontal = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        contentPadding = PaddingValues(vertical = 32.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         item {
             Column(
