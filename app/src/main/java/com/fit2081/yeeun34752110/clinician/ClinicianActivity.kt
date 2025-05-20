@@ -64,7 +64,6 @@ class ClinicianActivity : ComponentActivity() {
 
 @Composable
 fun ClinicianPage(
-    userId: Int,
     modifier: Modifier = Modifier,
     navController: NavHostController
 ) {

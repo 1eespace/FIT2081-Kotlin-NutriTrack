@@ -63,13 +63,13 @@ fun AppNavHost(
         }
 
         composable("nutricoach") {
-            NutriCoachPage(userId, modifier, navController)
+            NutriCoachPage(userId, modifier)
         }
 
         composable("clinician login") { ClinicianLogin(navController) }
 
         composable("clinician") {
-            ClinicianPage(userId, modifier, navController)
+            ClinicianPage(modifier, navController)
         }
 
     }

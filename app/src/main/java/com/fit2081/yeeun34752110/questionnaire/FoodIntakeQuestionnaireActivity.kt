@@ -92,8 +92,7 @@ val personaImages = mapOf(
 @Composable
 fun QuestionnairePage(
     patientId: Int,
-    navController: NavController,
-    modifier: Modifier = Modifier
+    navController: NavController
 ) {
     val context = LocalContext.current
     val viewModel: FoodIntakeQuestionnaireViewModel = viewModel(

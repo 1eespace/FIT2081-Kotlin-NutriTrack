@@ -23,7 +23,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
 import com.fit2081.yeeun34752110.AppViewModelFactory
 import com.fit2081.yeeun34752110.nutricoach.fruitapi.FruitsRepository
@@ -47,8 +46,7 @@ class NutriCoachActivity : ComponentActivity() {
 @Composable
 fun NutriCoachPage(
     userId: Int,
-    modifier: Modifier = Modifier,
-    navController: NavHostController
+    modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
     val viewModel: NutriCoachViewModel = viewModel(

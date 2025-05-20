@@ -143,7 +143,7 @@ fun ChatBotFAB(
 ) {
     Surface(
         shape = CircleShape,
-        color = Color(0xFF203A84),
+        color = Color(0xFF000102),
         shadowElevation = 12.dp,
         modifier = modifier
             .size(size)
@@ -236,7 +236,7 @@ fun ChatBotFABWithModal(
     }
 }
 
-fun isDietRelatedQuestion(message: String): Boolean {
+fun isRelatedQuestion(message: String): Boolean {
     val keywords = listOf("intake", "persona", "meal", "sleep", "wake", "health", "diet", "food", "nutrition")
     return keywords.any { message.lowercase().contains(it) }
 }
@@ -245,7 +245,7 @@ fun generateChatPrompt(
     viewModel: FoodIntakeQuestionnaireViewModel,
     userMessage: String
 ): String {
-    return if (isDietRelatedQuestion(userMessage)) {
+    return if (isRelatedQuestion(userMessage)) {
         val persona = viewModel.selectedPersona.value
         val sleep = viewModel.sleepTime.value
         val wake = viewModel.wakeTime.value
