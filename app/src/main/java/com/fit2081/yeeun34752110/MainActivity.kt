@@ -20,7 +20,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
@@ -172,7 +171,7 @@ fun LandingPage(modifier: Modifier = Modifier, navController: NavController) {
                         .fillMaxWidth()
                         .widthIn(max = 400.dp)
                         .height(48.dp),
-                    shape = RectangleShape
+                    shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("Continue", fontSize = 16.sp)
                 }

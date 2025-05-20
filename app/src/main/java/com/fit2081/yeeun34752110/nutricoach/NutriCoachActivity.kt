@@ -15,7 +15,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -132,7 +131,7 @@ fun NutriCoachPage(
                                 },
                                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF056207)),
                                 modifier = Modifier.height(56.dp),
-                                shape = RectangleShape
+                                shape = RoundedCornerShape(8.dp)
                             ) {
                                 Text("Details")
                             }
@@ -195,7 +194,7 @@ fun NutriCoachPage(
                         }
                     },
                     modifier = Modifier.fillMaxWidth().height(48.dp),
-                    shape = RectangleShape,
+                    shape = RoundedCornerShape(8.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF056207))
                 ) {
                     Icon(Icons.Default.Star, contentDescription = null)
@@ -226,7 +225,7 @@ fun NutriCoachPage(
                 Button(
                     onClick = { viewModel.toggleDialog(true) },
                     modifier = Modifier.fillMaxWidth().height(48.dp),
-                    shape = RectangleShape,
+                    shape = RoundedCornerShape(8.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF056207))
                 ) {
                     Text("Show All Tips")
@@ -241,7 +240,7 @@ fun NutriCoachPage(
             confirmButton = {
                 Button(
                     onClick = { viewModel.toggleDialog(false) },
-                    shape = RectangleShape,
+                    shape = RoundedCornerShape(8.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF056207))
                 ) {
                     Text("Done", color = Color.White)

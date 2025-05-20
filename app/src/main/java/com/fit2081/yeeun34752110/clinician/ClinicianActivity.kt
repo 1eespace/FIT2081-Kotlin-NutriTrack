@@ -35,7 +35,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -169,7 +168,7 @@ fun ClinicianPage(
                         modifier = Modifier
                             .weight(1f)
                             .height(48.dp),
-                        shape = RectangleShape,
+                        shape = RoundedCornerShape(8.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF056207))
                     ) {
                         Text("Find Data Pattern", color = Color.White)
@@ -270,7 +269,7 @@ fun ClinicianPage(
                         modifier = Modifier
                             .height(48.dp)
                             .widthIn(min = 80.dp),
-                        shape = RectangleShape,
+                        shape = RoundedCornerShape(8.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF056207))
                     ) {
                         // Logout from Clinician Dashboard

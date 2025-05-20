@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Slider
@@ -27,7 +28,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.compose.ui.text.font.FontWeight
@@ -163,7 +163,7 @@ fun InsightsPage(
                                 )
                             },
                             modifier = Modifier.weight(1f).height(48.dp),
-                            shape = RectangleShape,
+                            shape = RoundedCornerShape(8.dp),
                             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF056207))
                         ) {
                             Text("Share with someone", color = Color.White)
@@ -181,7 +181,7 @@ fun InsightsPage(
                                 }
                             },
                             modifier = Modifier.weight(1f).height(48.dp),
-                            shape = RectangleShape,
+                            shape = RoundedCornerShape(8.dp),
                             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF056207))
                         ) {
                             Text("Improve my diet!", color = Color.White)

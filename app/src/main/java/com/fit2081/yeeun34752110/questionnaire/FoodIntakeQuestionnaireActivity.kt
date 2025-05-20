@@ -212,7 +212,7 @@ fun QuestionnairePage(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(50.dp),
-                        shape = RectangleShape
+                        shape = RoundedCornerShape(8.dp)
                     ) {
                         Text("Save")
                     }

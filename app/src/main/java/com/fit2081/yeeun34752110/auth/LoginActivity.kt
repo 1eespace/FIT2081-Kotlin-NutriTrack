@@ -9,6 +9,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
@@ -18,7 +19,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -225,7 +225,7 @@ fun LoginPage(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp),
-                    shape = RectangleShape
+                    shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("Login")
                 }
@@ -245,7 +245,7 @@ fun LoginPage(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp),
-                    shape = RectangleShape
+                    shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("Register")
                 }

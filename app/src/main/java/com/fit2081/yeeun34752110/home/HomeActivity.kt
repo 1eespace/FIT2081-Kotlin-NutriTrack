@@ -106,7 +106,7 @@ fun HomePage(userId: Int, navController: NavHostController, modifier: Modifier =
                                 },
                                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF006400)),
                                 contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
-                                shape = RoundedCornerShape(0.dp),
+                                shape = RoundedCornerShape(3.dp),
                                 modifier = Modifier.height(36.dp)
                             ) {
                                 Icon(Icons.Filled.Edit, contentDescription = "Edit", modifier = Modifier.size(18.dp))
