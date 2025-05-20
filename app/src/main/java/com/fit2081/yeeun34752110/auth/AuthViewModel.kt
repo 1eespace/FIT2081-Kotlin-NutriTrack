@@ -18,12 +18,14 @@ class AuthViewModel(private val repository: PatientRepository) : ViewModel() {
     // -------------------------------
     var isLoading = mutableStateOf(false)
         private set
-
     fun setLoading(value: Boolean) {
         isLoading.value = value
     }
 
+    // patientIds
     val patientIds: Flow<List<Int>> = repository.allPatientIds()
+    // unregister patientIds
+    val unregisteredIds: Flow<List<Int>> = repository.unregisteredPatientIds()
 
     // -------------------------------
     // Login State

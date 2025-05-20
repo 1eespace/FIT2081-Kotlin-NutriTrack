@@ -66,7 +66,8 @@ fun RegisterPage(
     val password = viewModel.password
     val confirmPassword = viewModel.confirmPassword
     val expanded = viewModel.registerDropdownExpanded
-    val userIds by viewModel.patientIds.collectAsState(initial = emptyList())
+    // Just showing unregistered patient ids
+    val userIds by viewModel.unregisteredIds.collectAsState(initial = emptyList())
     val message = viewModel.registrationMessage.value
 
     // Dynamic top padding based on screen height
