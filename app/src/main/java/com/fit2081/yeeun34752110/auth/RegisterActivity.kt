@@ -234,7 +234,7 @@ fun RegisterPage(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Text(
-                    text = "This app is only for pre-registered users. Please enter your ID, phone number and password to claim your account.",
+                    text = "This app is only for pre-registered users. Please enter your ID, Phone number, Name and Password to claim your account.",
                     style = MaterialTheme.typography.bodySmall,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(horizontal = 12.dp)
