@@ -237,7 +237,7 @@ fun ChatBotFABWithModal(
 }
 
 fun isDietRelatedQuestion(message: String): Boolean {
-    val keywords = listOf("meal", "diet", "food", "sleep", "wake", "health", "nutrition", "intake", "persona")
+    val keywords = listOf("intake", "persona", "meal", "sleep", "wake", "health", "diet", "food", "nutrition")
     return keywords.any { message.lowercase().contains(it) }
 }
 // User can ask about their questionnaire question or general diet question like BMI
