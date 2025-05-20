@@ -24,6 +24,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -118,7 +119,7 @@ fun HomePage(userId: Int, navController: NavHostController, modifier: Modifier =
                         Spacer(modifier = Modifier.height(12.dp))
 
                         // Show food quality image
-                        val imageRes = when {
+                        val imageResult = when {
                             foodQualityScore.toInt() >= 80 -> R.drawable.high_quality
                             foodQualityScore.toInt() >= 40 -> R.drawable.medium_quality
                             else -> R.drawable.low_quality
@@ -129,7 +130,7 @@ fun HomePage(userId: Int, navController: NavHostController, modifier: Modifier =
                             contentAlignment = Alignment.Center
                         ) {
                             Image(
-                                painter = painterResource(id = imageRes),
+                                painter = painterResource(id = imageResult),
                                 contentDescription = "Score Image",
                                 modifier = Modifier.size(200.dp)
                             )
@@ -174,12 +175,27 @@ fun HomePage(userId: Int, navController: NavHostController, modifier: Modifier =
                                     .size(25.dp)
                                     .background(Color(0xFF006400), shape = CircleShape)
                             ) {
-                                Icon(
-                                    Icons.Filled.KeyboardArrowUp,
-                                    contentDescription = "Arrow Up",
-                                    tint = Color.White,
-                                    modifier = Modifier.align(Alignment.Center)
-                                )
+                                // Changing the Arrow direction depends on the Quality Score
+                                val arrowIcon = if (foodQualityScore >= 50) {
+                                    Icons.Filled.KeyboardArrowUp
+                                } else {
+                                    Icons.Filled.KeyboardArrowDown
+                                }
+
+                                val arrowDescription = if (foodQualityScore >= 50) "Arrow Up" else "Arrow Down"
+
+                                Box(
+                                    modifier = Modifier
+                                        .size(25.dp)
+                                        .background(Color(0xFF006400), shape = CircleShape)
+                                ) {
+                                    Icon(
+                                        arrowIcon,
+                                        contentDescription = arrowDescription,
+                                        tint = Color.White,
+                                        modifier = Modifier.align(Alignment.Center)
+                                    )
+                                }
                             }
                             Spacer(modifier = Modifier.width(10.dp))
                             Text(
