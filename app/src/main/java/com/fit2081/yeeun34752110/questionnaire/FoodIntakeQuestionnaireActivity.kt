@@ -3,6 +3,7 @@ package com.fit2081.yeeun34752110.questionnaire
 import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -25,6 +26,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -39,6 +41,7 @@ import com.fit2081.yeeun34752110.R
 import com.fit2081.yeeun34752110.AppViewModelFactory
 import com.fit2081.yeeun34752110.databases.AuthManager
 import com.fit2081.yeeun34752110.databases.foodintakedb.FoodIntakeRepository
+import com.fit2081.yeeun34752110.genai.chatbot.ChatBotFABWithModal
 import com.fit2081.yeeun34752110.home.HomeActivity
 import java.util.Calendar
 import com.fit2081.yeeun34752110.ui.theme.NutriTrackTheme
@@ -107,6 +110,10 @@ fun QuestionnairePage(
         viewModel.loadExistingFoodIntake(patientId)
     }
 
+    // For chatBot location
+    val configuration = LocalConfiguration.current
+    val endPadding = if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 60.dp else 24.dp
+
     Scaffold(
         topBar = {
             HeaderTopAppBar(
@@ -116,6 +123,14 @@ fun QuestionnairePage(
                 onBack = { navController.popBackStack() }
             )
         },
+        floatingActionButton = {
+            ChatBotFABWithModal(
+                patientId = patientId,
+                questionnaireViewModel = viewModel,
+                modifier = Modifier
+                    .padding(end = endPadding, bottom = 32.dp)
+            )
+        }
     ) { innerPadding ->
         LazyColumn(
             modifier = Modifier

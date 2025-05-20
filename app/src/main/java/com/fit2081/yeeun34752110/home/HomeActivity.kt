@@ -30,7 +30,6 @@ import androidx.navigation.NavHostController
 import com.fit2081.yeeun34752110.R
 import com.fit2081.yeeun34752110.AppViewModelFactory
 import com.fit2081.yeeun34752110.MainActivity
-import com.fit2081.yeeun34752110.genai.chatbot.ChatBotFABWithModal
 
 class HomeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -216,14 +215,6 @@ fun HomePage(userId: Int, navController: NavHostController, modifier: Modifier =
                     }
                 }
             }
-
-            // Floating chat bot button and dialog modal
-            ChatBotFABWithModal(
-                patientId = userId,
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(end = 30.dp, bottom = 120.dp)
-            )
         }
     }
 }

@@ -25,6 +25,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fit2081.yeeun34752110.AppViewModelFactory
 import com.fit2081.yeeun34752110.genai.GenAiViewModel
 import com.fit2081.yeeun34752110.genai.UiState
+import com.fit2081.yeeun34752110.questionnaire.FoodIntakeQuestionnaireViewModel
 
 /**
  * Data class to represent a chat message
@@ -35,7 +36,10 @@ data class ChatMessage(val isUser: Boolean, val text: String)
  * Displays the chat interface with NutriBot assistant
  */
 @Composable
-fun ChatBot(patientId: Int) {
+fun ChatBot(
+    patientId: Int,
+    questionnaireViewModel: FoodIntakeQuestionnaireViewModel
+) {
     val context = LocalContext.current
     val viewModel: GenAiViewModel = viewModel(factory = AppViewModelFactory(context))
 
@@ -43,7 +47,7 @@ fun ChatBot(patientId: Int) {
     val uiState by viewModel.uiState.collectAsState()
     val messages = remember { mutableStateListOf<ChatMessage>() }
 
-    // Append bot response automatically
+    // Append bot response
     LaunchedEffect(uiState) {
         if (uiState is UiState.Success) {
             messages.add(ChatMessage(false, (uiState as UiState.Success).outputText))
@@ -56,11 +60,11 @@ fun ChatBot(patientId: Int) {
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Text("💬 NutriBot", fontWeight = FontWeight.Bold, fontSize = 20.sp)
+        Text("🤖 Need help with the questionnaire?", fontWeight = FontWeight.Bold, fontSize = 20.sp)
 
         LazyColumn(
             modifier = Modifier
-                .weight(1f) // expands
+                .weight(1f)
                 .fillMaxWidth()
         ) {
             items(messages) { msg ->
@@ -100,7 +104,7 @@ fun ChatBot(patientId: Int) {
         OutlinedTextField(
             value = userMessage,
             onValueChange = { userMessage = it },
-            label = { Text("Type your question") },
+            label = { Text("Still curious? Ask me anything.") },
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -108,7 +112,8 @@ fun ChatBot(patientId: Int) {
             onClick = {
                 if (userMessage.isNotBlank()) {
                     messages.add(ChatMessage(true, userMessage))
-                    viewModel.sendPrompt(userMessage, patientId, saveToDb = false)
+                    val prompt = generateChatPrompt(questionnaireViewModel, userMessage)
+                    viewModel.sendPrompt(prompt, patientId, saveToDb = false)
                     userMessage = ""
                 }
             },
@@ -155,6 +160,7 @@ fun ChatBotFAB(
 @Composable
 fun ChatBotFABWithModal(
     patientId: Int,
+    questionnaireViewModel: FoodIntakeQuestionnaireViewModel,
     modifier: Modifier = Modifier,
     size: Dp = 56.dp
 ) {
@@ -210,10 +216,54 @@ fun ChatBotFABWithModal(
                             .fillMaxSize()
                             .padding(top = 48.dp, start = 16.dp, end = 16.dp, bottom = 16.dp)
                     ) {
-                        ChatBot(patientId = patientId)
+                        ChatBot(patientId = patientId, questionnaireViewModel = questionnaireViewModel)
                     }
                 }
             }
         }
+    }
+}
+
+fun isDietRelatedQuestion(message: String): Boolean {
+    val keywords = listOf("meal", "diet", "food", "sleep", "wake", "health", "nutrition", "intake", "persona")
+    return keywords.any { message.lowercase().contains(it) }
+}
+// User can ask about their questionnaire question or general diet question like BMI
+fun generateChatPrompt(
+    viewModel: FoodIntakeQuestionnaireViewModel,
+    userMessage: String
+): String {
+    return if (isDietRelatedQuestion(userMessage)) {
+        val persona = viewModel.selectedPersona.value
+        val sleep = viewModel.sleepTime.value
+        val wake = viewModel.wakeTime.value
+        val meal = viewModel.biggestMealTime.value
+
+        val selectedIntakes = viewModel.selectedCategories.value
+            .filterValues { it }
+            .keys.joinToString(", ")
+            .ifEmpty { "None" }
+
+        """
+        The user has provided the following food intake information:
+
+        - Persona: $persona
+        - Wake-up time: $wake
+        - Sleep time: $sleep
+        - Biggest meal time: $meal
+        - Food categories consumed: $selectedIntakes
+
+        The user is now asking:
+        "$userMessage"
+
+        Please provide a relevant and helpful response based on the user's dietary profile.
+        """.trimIndent()
+    } else {
+        """
+        The user is asking:
+        "$userMessage"
+
+        Please provide a clear and helpful answer.
+        """.trimIndent()
     }
 }
