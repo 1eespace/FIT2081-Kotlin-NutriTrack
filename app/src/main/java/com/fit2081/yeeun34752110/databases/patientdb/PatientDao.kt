@@ -37,6 +37,10 @@ interface PatientDao {
     @Query("SELECT * FROM patients WHERE patientSex = :sex")
     fun getPatientsBySex(sex: String): Flow<List<Patient>>
 
+    // For showing registered userIds on login page
+    @Query("SELECT patientId FROM patients WHERE patientPassword IS NOT NULL AND patientPassword != ''")
+    fun getRegisteredPatientIds(): Flow<List<Int>>
+
     // Get only all patient IDs
     @Query("SELECT patientId FROM patients")
     fun getAllPatientIds(): Flow<List<Int>>

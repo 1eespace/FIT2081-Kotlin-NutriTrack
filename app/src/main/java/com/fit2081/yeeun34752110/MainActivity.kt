@@ -30,6 +30,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.fit2081.yeeun34752110.databases.AuthManager
 import com.fit2081.yeeun34752110.navigation.AppNavHost
 import com.fit2081.yeeun34752110.navigation.BottomNavBar
 import com.fit2081.yeeun34752110.ui.theme.NutriTrackTheme
@@ -41,8 +42,10 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        // Load patients from CSV
         viewModel.loadAndInsertFromCSV(this)
+        // Initialise session
+        AuthManager.init(applicationContext)
 
         setContent {
             NutriTrackTheme {

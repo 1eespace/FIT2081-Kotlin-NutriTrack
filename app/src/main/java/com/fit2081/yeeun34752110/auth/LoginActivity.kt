@@ -69,7 +69,7 @@ fun LoginPage(
     // Password visibility state
     var showPassword by remember { mutableStateOf(false) }
     val expanded = viewModel.expanded
-    val userIds by viewModel.patientIds.collectAsState(initial = emptyList())
+    val userIds by viewModel.registeredIds.collectAsState(initial = emptyList())
     val loginSuccess = viewModel.loginSuccessful.value
     val isLoading = viewModel.isLoading.value
     val loginMessage = viewModel.loginMessage.value
@@ -209,7 +209,7 @@ fun LoginPage(
                     onClick = {
                         if (selectedUserId.isNotEmpty() && password.isNotEmpty()) {
                             viewModel.loginSuccessful.value = false
-                            viewModel.loginFun(selectedUserId, password)
+                            viewModel.loginFun(context, selectedUserId, password)
                         } else {
                             Toast.makeText(
                                 context,

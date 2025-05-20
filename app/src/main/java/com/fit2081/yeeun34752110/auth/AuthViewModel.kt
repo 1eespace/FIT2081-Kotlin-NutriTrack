@@ -26,6 +26,8 @@ class AuthViewModel(private val repository: PatientRepository) : ViewModel() {
     val patientIds: Flow<List<Int>> = repository.allPatientIds()
     // unregister patientIds
     val unregisteredIds: Flow<List<Int>> = repository.unregisteredPatientIds()
+    // register patientIds
+    val registeredIds: Flow<List<Int>> = repository.registeredPatientIds()
 
     // -------------------------------
     // Login State
@@ -100,7 +102,7 @@ class AuthViewModel(private val repository: PatientRepository) : ViewModel() {
     // -------------------------------
     // Login Logic
     // -------------------------------
-    fun loginFun(userId: String, password: String) {
+    fun loginFun(context: Context, userId: String, password: String) {
         viewModelScope.launch {
             loginSuccessful.value = false
 
@@ -122,7 +124,7 @@ class AuthViewModel(private val repository: PatientRepository) : ViewModel() {
                     loginMessage.value = "Incorrect password"
                 }
                 else -> {
-                    AuthManager.login(patientId.toString())
+                    AuthManager.login(context, patientId.toString())
 
                     loginMessage.value = "Login successful!"
                     loginSuccessful.value = true

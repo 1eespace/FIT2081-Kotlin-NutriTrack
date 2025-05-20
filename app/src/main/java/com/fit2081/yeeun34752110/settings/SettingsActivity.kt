@@ -151,7 +151,7 @@ fun SettingsPage(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
-                            AuthManager.logout()
+                            AuthManager.logout(context)
                             navController.navigate("login") {
                                 popUpTo(0) { inclusive = true }
                             }

@@ -19,6 +19,10 @@ class PatientRepository(private val patientDao: PatientDao) {
         }
     }
 
+    fun registeredPatientIds(): Flow<List<Int>> {
+        return patientDao.getRegisteredPatientIds()
+    }
+
     suspend fun getPatientById(id: Int): Patient? {
         return patientDao.findPatientById(id)
     }
