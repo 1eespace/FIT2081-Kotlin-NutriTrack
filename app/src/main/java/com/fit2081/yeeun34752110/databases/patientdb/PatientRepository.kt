@@ -6,15 +6,10 @@ import kotlinx.coroutines.flow.map
 
 class PatientRepository(private val patientDao: PatientDao) {
 
-    // Fetch all patient IDs as a Flow
-    fun allPatientIds(): Flow<List<Int>> {
-        return patientDao.getAllPatientIds()
-    }
-
     // Fetch all unregister patient IDs
     fun unregisteredPatientIds(): Flow<List<Int>> {
         return patientDao.getAllPatients().map { patients ->
-            patients.filter { it.patientName.isNullOrBlank() && it.patientPassword.isNullOrBlank() }
+            patients.filter { it.patientName.isBlank() && it.patientPassword.isBlank() }
                 .map { it.patientId }
         }
     }

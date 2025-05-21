@@ -1,10 +1,12 @@
 package com.fit2081.yeeun34752110.questionnaire
 
+import android.annotation.SuppressLint
 import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -290,7 +292,7 @@ fun FoodCategorySelection(viewModel: FoodIntakeQuestionnaireViewModel) {
                         modifier = Modifier.padding(4.dp)
                     ) {
                         Checkbox(
-                            checked = selectedCategories[category] ?: false,
+                            checked = selectedCategories[category] == true,
                             onCheckedChange = { isChecked ->
                                 viewModel.toggleCategory(category, isChecked)
                             }
@@ -518,7 +520,7 @@ fun MealTimePicker(
     }
 }
 
-
+@SuppressLint("DefaultLocale")
 fun formatTimeToDisplay(time24: String): String {
     return try {
         val parts = time24.split(":")
@@ -528,10 +530,12 @@ fun formatTimeToDisplay(time24: String): String {
         val hour12 = if (hour % 12 == 0) 12 else hour % 12
         String.format("%02d:%02d %s", hour12, minute, amPm)
     } catch (e: Exception) {
-        time24 // fallback
+        Log.e("TimeFormat", "Invalid time format: $time24", e)
+        time24
     }
 }
 
+@SuppressLint("DefaultLocale")
 fun showTimePicker(
     context: Context,
     currentTime: String,
@@ -570,6 +574,7 @@ fun isTimeOrderValid(wake: String, meal: String, sleep: String): Boolean {
 
         adjustedWake < adjustedMeal && adjustedMeal < adjustedSleep
     } catch (e: Exception) {
+        Log.e("TimeValidation", "Time order check failed: wake=$wake, meal=$meal, sleep=$sleep", e)
         false
     }
 }

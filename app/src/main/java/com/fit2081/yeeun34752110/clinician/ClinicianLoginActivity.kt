@@ -1,5 +1,6 @@
 package com.fit2081.yeeun34752110.clinician
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -54,6 +55,7 @@ class ClinicianLoginActivity : ComponentActivity() {
     }
 }
 
+@SuppressLint("ConfigurationScreenWidthHeight")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ClinicianLogin(

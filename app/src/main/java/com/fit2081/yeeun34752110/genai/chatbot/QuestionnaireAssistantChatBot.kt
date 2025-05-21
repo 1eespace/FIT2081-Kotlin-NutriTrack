@@ -1,5 +1,6 @@
 package com.fit2081.yeeun34752110.genai.chatbot
 
+import android.annotation.SuppressLint
 import android.content.res.Configuration
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -153,6 +154,7 @@ fun ChatBotFAB(
 }
 
 // Combines FAB and ModalBottomSheet to show ChatBot
+@SuppressLint("ConfigurationScreenWidthHeight")
 @Composable
 fun ChatBotFABWithModal(
     patientId: Int,

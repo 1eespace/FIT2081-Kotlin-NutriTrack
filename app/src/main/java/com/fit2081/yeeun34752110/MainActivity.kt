@@ -7,6 +7,7 @@ package com.fit2081.yeeun34752110
  * All suggestions were reviewed, tested, and modified by me to suit the this A3 assignment's requirements.
  */
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -75,6 +76,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@SuppressLint("ConfigurationScreenWidthHeight")
 @Composable
 fun LandingPage(modifier: Modifier = Modifier, navController: NavController) {
     val context = LocalContext.current

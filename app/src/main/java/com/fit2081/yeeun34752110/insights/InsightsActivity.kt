@@ -1,5 +1,6 @@
 package com.fit2081.yeeun34752110.insights
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -50,6 +51,7 @@ class InsightsActivity : ComponentActivity() {
     }
 }
 
+@SuppressLint("DefaultLocale")
 @Composable
 fun InsightsPage(
     userId: Int,
@@ -193,6 +195,7 @@ fun InsightsPage(
     }
 }
 
+@SuppressLint("DefaultLocale")
 @Composable
 fun FoodScoreItem(name: String, score: Float, maxScore: Int) {
     Row(

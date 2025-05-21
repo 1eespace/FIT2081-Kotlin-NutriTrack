@@ -329,8 +329,8 @@ fun MotivationalAiSection(
     ) {
         Text(
             text = when (aiUiState) {
-                is UiState.Success -> (aiUiState as UiState.Success).outputText
-                is UiState.Error -> "Error: ${(aiUiState as UiState.Error).errorMessage}"
+                is UiState.Success -> aiUiState.outputText
+                is UiState.Error -> "Error: ${aiUiState.errorMessage}"
                 is UiState.Loading -> "Generating message..."
                 else -> "No motivational message yet"
             },
