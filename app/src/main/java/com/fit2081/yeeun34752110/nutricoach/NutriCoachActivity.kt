@@ -99,10 +99,11 @@ fun NutriCoachPage(userId: Int, modifier: Modifier = Modifier) {
                     textAlign = TextAlign.Center
                 )
 
+                // For optimalFruit score condition logic
                 if (((patient?.fruits as? Int) ?: 0) < 10) {
                     FruitInputSection(viewModel, coroutineScope, repository, fruitName, fruitDetails)
                 } else {
-                    // Random image
+                    // Random image: patient has optimal FruitScore
                     OptimalScoreSection()
                 }
 
