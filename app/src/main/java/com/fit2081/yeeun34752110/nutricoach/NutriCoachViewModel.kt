@@ -36,6 +36,7 @@ class NutriCoachViewModel(
 
     fun updateFruitName(newValue: String) {
         fruitName = newValue
+        fruitDetailsMap = emptyMap()
     }
 
     fun clearFruitDetails() {

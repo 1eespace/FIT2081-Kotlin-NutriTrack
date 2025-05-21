@@ -176,6 +176,8 @@ fun FruitInputSection(
     fruitName: String,
     fruitDetails: Map<String, String>
 ) {
+    var showError by remember { mutableStateOf(false) }
+
     Column {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -183,9 +185,14 @@ fun FruitInputSection(
         ) {
             OutlinedTextField(
                 value = fruitName,
-                onValueChange = { viewModel.updateFruitName(it) },
+                onValueChange = {
+                    viewModel.updateFruitName(it)
+                    showError = false
+                },
                 label = { Text("Fruit Name") },
-                modifier = Modifier.weight(1f).padding(end = 8.dp)
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(end = 8.dp)
             )
             Button(
                 onClick = {
@@ -193,6 +200,7 @@ fun FruitInputSection(
                         val trimmed = fruitName.trim().lowercase()
                         if (trimmed.isNotBlank()) {
                             viewModel.fetchFruitDetails(trimmed, DecimalFormat("0.#"), repository)
+                            showError = viewModel.fruitDetailsMap.isEmpty()
                         }
                     }
                 },
@@ -202,10 +210,24 @@ fun FruitInputSection(
             ) {
                 Text("Details")
             }
-            // Clear button
-            IconButton(onClick = { viewModel.clearFruitDetails() }, modifier = Modifier.size(56.dp)) {
+            IconButton(
+                onClick = {
+                    viewModel.clearFruitDetails()
+                    showError = false
+                },
+                modifier = Modifier.size(56.dp)
+            ) {
                 Icon(Icons.Default.Refresh, contentDescription = "Clear", tint = Color.Gray)
             }
+        }
+
+        if (showError && fruitName.isNotBlank()) {
+            Text(
+                text = "No data found for \"$fruitName\"",
+                color = Color.Red,
+                fontSize = 14.sp,
+                modifier = Modifier.padding(top = 4.dp)
+            )
         }
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -223,7 +245,9 @@ fun FruitInputSection(
                 } else {
                     fruitDetails.forEach { (label, value) ->
                         Row(
-                            modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(label, fontWeight = FontWeight.Medium)
@@ -239,16 +263,39 @@ fun FruitInputSection(
 // Showing Random Image to optimalFruit score patient/user
 @Composable
 fun OptimalScoreSection() {
-    Text("\u2705 You have an optimal fruit score!", fontSize = 16.sp, fontWeight = FontWeight.Medium)
-    val randomImageUrl = remember { "https://picsum.photos/300/200" }
-    AsyncImage(
-        model = randomImageUrl,
-        contentDescription = "Random Image",
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(300.dp)
-            .padding(top = 8.dp)
-    )
+    var imageLoadFailed by remember { mutableStateOf(false) }
+
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(
+            "\u2705 You have an optimal fruit score!",
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Medium
+        )
+
+        val randomImageUrl = remember { "https://picsum.photos/300/200" }
+
+        AsyncImage(
+            model = randomImageUrl,
+            contentDescription = "Random Image",
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(300.dp)
+                .padding(top = 8.dp),
+            onError = {
+                imageLoadFailed = true
+            }
+        )
+
+        if (imageLoadFailed) {
+            Text(
+                text = "Failed to load image. Please check your internet connection.",
+                color = Color.Red,
+                fontSize = 14.sp,
+                modifier = Modifier.padding(top = 8.dp),
+                textAlign = TextAlign.Center
+            )
+        }
+    }
 }
 
 // Motivational Messages
