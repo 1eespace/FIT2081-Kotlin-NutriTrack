@@ -100,10 +100,10 @@ fun NutriCoachPage(userId: Int, modifier: Modifier = Modifier) {
                 )
 
                 // For optimalFruit score condition logic
-                if (((patient?.fruits as? Int) ?: 0) < 10) {
+                val fruitScore = (patient?.fruits ?: 0f).toDouble()
+                if (fruitScore < 10.0) {
                     FruitInputSection(viewModel, coroutineScope, repository, fruitName, fruitDetails)
                 } else {
-                    // Random image: patient has optimal FruitScore
                     OptimalScoreSection()
                 }
 

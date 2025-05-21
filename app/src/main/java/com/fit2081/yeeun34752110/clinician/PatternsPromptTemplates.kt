@@ -3,6 +3,7 @@ package com.fit2081.yeeun34752110.clinician
 import com.fit2081.yeeun34752110.databases.patientdb.Patient
 
 object PatternsPromptTemplates {
+
     private val templates: List<(List<Patient>) -> String> = listOf(
 
         // 1. Analyse fat, water, fruit intake, and discretionary food overuse
@@ -24,7 +25,8 @@ object PatternsPromptTemplates {
 
             Write your answer as a numbered list (1–3), in a clinical tone.
             Highlight only the top 3 most meaningful and actionable insights.
-            **Keep each insight concise (max 20 words) and clinically focused.**
+            If no clear correlation is found, suggest the next most relevant or interesting clinical insight based on the available data.
+            Keep each insight concise (max 20 words) and clinically focused.
 
             """.trimIndent()
         },
@@ -50,7 +52,8 @@ object PatternsPromptTemplates {
             1. ...
             2. ...
             3. ...
-            Highlight only the top 3 most meaningful and keep each insight concise (max 20 words) and clinically focused."
+            Highlight only the top 3 most meaningful and keep each insight concise (max 20 words) and clinically focused.
+            If no clear correlation is found, suggest the next most relevant or interesting clinical insight based on the available data.
             """.trimIndent()
         },
 
@@ -72,6 +75,7 @@ object PatternsPromptTemplates {
             - Areas of improvement for fruit and vegetable diversity
 
             Keep each insight concise (max 20 words) and clinically focused.
+            If no clear correlation is found, suggest the next most relevant or interesting clinical insight based on the available data.
             
             """.trimIndent()
         },
@@ -94,10 +98,61 @@ object PatternsPromptTemplates {
             - Suggestions for hydration- and fruit-linked interventions
 
             Format as 3 short, numbered paragraphs. And, keep each insight concise (max 20 words) and clinically focused.
+            If no clear correlation is found, suggest the next most relevant or interesting clinical insight based on the available data.
             """.trimIndent()
         },
 
-        // 5. Compare gender-based(Grouping) dietary patterns
+        // 5. Evaluate protein source diversity
+        { patients ->
+            val summary = patients.take(9).joinToString("\n") {
+                "Patient ${it.patientId} (${it.patientSex}): MeatAlt=${it.meatAndAlternatives}/10, Dairy=${it.dairyAndAlternatives}/10, WholeGrains=${it.wholeGrains}/5, TotalScore=${it.totalScore}"
+            }
+
+            """
+            You are investigating how patients obtain protein and whether they achieve a diverse balance of sources.
+        
+            Sample data:
+            $summary
+        
+            Identify 3 insights based on:
+            - Meat vs dairy protein balance
+            - Role of whole grains in protein contribution
+            - Gender-related variation, if any
+        
+            Present your findings as 3 numbered insights. 
+            Each should be concise (max 20 words), clinically meaningful, and suggest improvements if needed.
+            If no strong pattern is observed, mention another notable dietary imbalance found.
+            """.trimIndent()
+        },
+
+        // 6. Identify common traits in low total score patients
+        { patients ->
+            val sorted = patients.sortedBy { it.totalScore }.take(9)
+            val summary = sorted.joinToString("\n") {
+                "Patient ${it.patientId}: TotalScore=${it.totalScore}, Veg=${it.vegetables}/10, Grains=${it.grainsAndCereals}/5, Discretionary=${it.discretionaryFoods}/10, Water=${it.water}/5, Alcohol=${it.alcohol}/5, Sugars=${it.sugars}/10"
+            }
+
+            """
+            You are identifying at-risk patients based on their overall nutrition score.
+        
+            Data below shows 9 patients with the lowest HEIFA scores:
+            $summary
+        
+            Derive 3 clinically meaningful insights by analyzing:
+            - Common deficiencies among low-score patients
+            - Over-consumed food types
+            - Any distinct patterns across the data
+        
+            Present your insights as:
+            1. ...
+            2. ...
+            3. ...
+            Keep each insight concise (max 20 words) and clinically focused.
+            If no strong pattern is observed, describe any other notable dietary concern from the data.
+            """.trimIndent()
+        },
+
+        // 7. Compare gender-based(Grouping) dietary patterns
         { patients ->
             val genderGroups = patients.groupBy {
                 it.patientSex?.trim()?.replaceFirstChar { c -> c.uppercaseChar() } ?: "Unknown"
@@ -136,7 +191,6 @@ object PatternsPromptTemplates {
             
             """.trimIndent()
         }
-
     )
 
     fun getRandomPrompt(patients: List<Patient>): String {
