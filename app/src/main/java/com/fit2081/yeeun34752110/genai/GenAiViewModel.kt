@@ -13,7 +13,7 @@ import com.fit2081.yeeun34752110.databases.nutricoachtips.NutriCoachTips
 import com.fit2081.yeeun34752110.databases.nutricoachtips.NutriCoachTipsRepository
 
 // apiKey for GenAi
-const val GENAI_API_KEY= "AIzaSyBYwmYfkns0pYfVe5ZfCBE-wKC5JE-viSM"
+const val GENAI_API_KEY= ""
 
 class GenAiViewModel(
     private val repository: NutriCoachTipsRepository
