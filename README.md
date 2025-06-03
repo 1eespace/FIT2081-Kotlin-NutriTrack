@@ -19,7 +19,7 @@ NutriTrack is a Kotlin-based Android application designed to help users track th
 - Retrofit (API integration)
 - Material 3
 
-## 🚀 Getting Started
+## Getting Started
 1. Open the project in Android Studio
 2. Sync Gradle
 3. Run the app on an emulator or physical device
